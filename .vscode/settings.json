@@ -1,0 +1,27 @@
+{
+  "conventionalCommits.scopes": ["global", "client", "server"],
+
+  // ==================================================================================
+  // Material Icon Theme settings
+  // ==================================================================================
+  "workbench.iconTheme": "material-icon-theme",
+  "material-icon-theme.folders.associations": {
+    /* 1)       */ "domain": "core",
+    /* 1.1)     */ "entities": "class",
+    /* 1.2)     */ "exceptions": "error",
+
+    /* 2)       */ "application": "app",
+    /* 2.1)     */ "usecases": "job",
+    /* 2.2)     */ "gateways": "interface",
+
+    /* 3)       */ "infrastructure": "environment",
+    /* 3.1)     */ "adapters": "plugin",
+    /* 3.1.1)   */ "http": "api",
+    /* 3.2)     */ "persistence": "database",
+    /* 3.2.n.1) */ "mappers": "mappings"
+  },
+  "material-icon-theme.files.associations": {
+    "index.ts": "search"
+  },
+  "material-icon-theme.activeIconPack": "react"
+}

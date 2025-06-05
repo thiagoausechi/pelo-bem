@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "PKief.material-icon-theme",
+    "vivaxy.vscode-conventional-commits",
+    "kamikillerto.vscode-colorize",
+    "DavidAnson.vscode-markdownlint",
+    "Cardinal90.multi-cursor-case-preserve",
+    "MylesMurphy.prettify-ts",
+    "YoavBls.pretty-ts-errors",
+    "bradlc.vscode-tailwindcss",
+    "vitest.explorer",
+    "aaron-bond.better-comments",
+    "EditorConfig.EditorConfig"
+  ]
+}
