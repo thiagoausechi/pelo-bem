@@ -1,6 +1,8 @@
 import { err, ok, type Result } from "@core/result";
-import { EmptyPropertyError } from "@server/domain/errors/empty-property";
-import { InvalidArgumentError } from "@server/domain/errors/invalid-argument";
+import {
+  EmptyPropertyError,
+  InvalidArgumentError,
+} from "@server/domain/errors";
 import type { EmailValidator } from "@server/domain/services/email-validator";
 
 interface OwnerProps {
