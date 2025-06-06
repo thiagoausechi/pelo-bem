@@ -3,7 +3,7 @@ import {
   EmptyPropertyError,
   InvalidArgumentError,
 } from "@server/domain/errors";
-import type { EmailValidator } from "./email-validator";
+import type { EmailValidator } from "@server/domain/value-objects/email";
 
 interface OwnerProps {
   id?: string;
