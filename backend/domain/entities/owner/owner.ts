@@ -35,6 +35,9 @@ export class Owner {
   public static create(
     props: OwnerProps & Dependencies,
   ): Result<Owner, EmptyPropertyError | InvalidArgumentError> {
+    if (props.id !== undefined && props.id.length === 0)
+      return err(new EmptyPropertyError("ID", Owner.ENTITY_NAME));
+
     if (props.fullname.length === 0)
       return err(new EmptyPropertyError("Nome Completo", Owner.ENTITY_NAME));
 
