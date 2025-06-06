@@ -47,6 +47,9 @@ export class Owner {
     if (props.phone.length !== 11)
       return err(new InvalidArgumentError("Telefone", Owner.ENTITY_NAME));
 
+    if (props.profilePicture !== undefined && props.profilePicture.length === 0)
+      return err(new EmptyPropertyError("Foto de Perfil", Owner.ENTITY_NAME));
+
     return ok(new Owner({ ...props }));
   }
 }
