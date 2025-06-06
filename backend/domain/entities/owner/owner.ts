@@ -3,18 +3,14 @@ import {
   EmptyPropertyError,
   InvalidArgumentError,
 } from "@server/domain/errors";
-import type { EmailValidator } from "@server/domain/value-objects/email";
+import type { Email } from "@server/domain/value-objects/email";
 
 interface OwnerProps {
   id?: string;
   fullname: string;
-  email: string;
+  email: Email;
   phone: string;
   profilePicture?: string;
-}
-
-interface Dependencies {
-  emailValidator: EmailValidator;
 }
 
 export class Owner {
@@ -22,7 +18,7 @@ export class Owner {
 
   public readonly id?: string;
   public readonly fullname: string;
-  public readonly email: string;
+  public readonly email: Email;
   public readonly phone: string;
   public readonly profilePicture?: string;
 
@@ -35,19 +31,15 @@ export class Owner {
   }
 
   public static create(
-    props: OwnerProps & Dependencies,
+    props: OwnerProps,
   ): Result<Owner, EmptyPropertyError | InvalidArgumentError> {
-    const { id, fullname, email, phone, profilePicture, emailValidator } =
-      props;
+    const { id, fullname, phone, profilePicture } = props;
 
     if (id !== undefined && id.length === 0)
       return err(new EmptyPropertyError("ID", Owner.ENTITY_NAME));
 
     if (fullname.length === 0)
       return err(new EmptyPropertyError("Nome Completo", Owner.ENTITY_NAME));
-
-    if (!emailValidator.isValid(email))
-      return err(new InvalidArgumentError("E-mail", Owner.ENTITY_NAME));
 
     if (phone.length !== 11)
       return err(new InvalidArgumentError("Telefone", Owner.ENTITY_NAME));
