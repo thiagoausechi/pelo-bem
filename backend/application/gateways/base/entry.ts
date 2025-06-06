@@ -16,8 +16,10 @@ export type Entry<T> = T & {
   updatedAt: Date;
 };
 
-export type EntrySearchParams<T> = T & {
-  id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-};
+export type EntrySearchParams<T> = Partial<
+  T & {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }
+>;
