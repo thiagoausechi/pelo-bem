@@ -4,6 +4,7 @@ import {
   TooHighValueError,
   TooLowValueError,
 } from "@server/domain/errors";
+import { Owner } from "../owner";
 import type { Gender } from "./gender.enum";
 import { Species, type Specie } from "./species.enum";
 
@@ -57,7 +58,9 @@ export class Pet {
       return err(new EmptyPropertyError("ID", Pet.ENTITY_NAME));
 
     if (ownerId.length === 0)
-      return err(new EmptyPropertyError("ID do Dono", Pet.ENTITY_NAME));
+      return err(
+        new EmptyPropertyError("ID do " + Owner.ENTITY_NAME, Pet.ENTITY_NAME),
+      );
 
     if (name.length === 0)
       return err(new EmptyPropertyError("Nome", Pet.ENTITY_NAME));
