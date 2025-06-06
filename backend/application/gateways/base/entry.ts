@@ -15,3 +15,9 @@ export type Entry<T> = T & {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type EntrySearchParams<T> = T & {
+  id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
