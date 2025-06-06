@@ -35,19 +35,22 @@ export class Owner {
   public static create(
     props: OwnerProps & Dependencies,
   ): Result<Owner, EmptyPropertyError | InvalidArgumentError> {
-    if (props.id !== undefined && props.id.length === 0)
+    const { id, fullname, email, phone, profilePicture, emailValidator } =
+      props;
+
+    if (id !== undefined && id.length === 0)
       return err(new EmptyPropertyError("ID", Owner.ENTITY_NAME));
 
-    if (props.fullname.length === 0)
+    if (fullname.length === 0)
       return err(new EmptyPropertyError("Nome Completo", Owner.ENTITY_NAME));
 
-    if (!props.emailValidator.isValid(props.email))
+    if (!emailValidator.isValid(email))
       return err(new InvalidArgumentError("E-mail", Owner.ENTITY_NAME));
 
-    if (props.phone.length !== 11)
+    if (phone.length !== 11)
       return err(new InvalidArgumentError("Telefone", Owner.ENTITY_NAME));
 
-    if (props.profilePicture !== undefined && props.profilePicture.length === 0)
+    if (profilePicture !== undefined && profilePicture.length === 0)
       return err(new EmptyPropertyError("Foto de Perfil", Owner.ENTITY_NAME));
 
     return ok(new Owner({ ...props }));
