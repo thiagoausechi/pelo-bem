@@ -1,5 +1,12 @@
 {
-  "conventionalCommits.scopes": ["global", "client", "server"],
+  "conventionalCommits.scopes": [
+    "global",
+    "client",
+    "server",
+    "server/domain",
+    "server/app",
+    "server/infra"
+  ],
 
   // ==================================================================================
   // Material Icon Theme settings
