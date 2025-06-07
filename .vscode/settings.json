@@ -16,6 +16,7 @@
     /* 1)       */ "domain": "core",
     /* 1.1)     */ "entities": "class",
     /* 1.2)     */ "exceptions": "error",
+    /* 1.2)     */ "value-objects": "constant",
 
     /* 2)       */ "application": "app",
     /* 2.1)     */ "usecases": "job",
