@@ -10,7 +10,6 @@ interface VeterinarianProps {
   licenseNumber: License;
   email: Email;
   phone: Phone;
-  profilePicture?: string;
 }
 
 export class Veterinarian {
@@ -21,7 +20,6 @@ export class Veterinarian {
   public readonly licenseNumber: License;
   public readonly email: Email;
   public readonly phone: Phone;
-  public readonly profilePicture?: string;
 
   private constructor(props: VeterinarianProps) {
     this.id = props.id;
@@ -29,13 +27,12 @@ export class Veterinarian {
     this.licenseNumber = props.licenseNumber;
     this.email = props.email;
     this.phone = props.phone;
-    this.profilePicture = props.profilePicture;
   }
 
   public static create(
     props: VeterinarianProps,
   ): Result<Veterinarian, EmptyPropertyError> {
-    const { id, fullname, profilePicture } = props;
+    const { id, fullname } = props;
 
     if (id !== undefined && id.length === 0)
       return err(new EmptyPropertyError("ID", Veterinarian.ENTITY_NAME));
@@ -43,11 +40,6 @@ export class Veterinarian {
     if (fullname.length === 0)
       return err(
         new EmptyPropertyError("Nome Completo", Veterinarian.ENTITY_NAME),
-      );
-
-    if (profilePicture !== undefined && profilePicture.length === 0)
-      return err(
-        new EmptyPropertyError("Foto de Perfil", Veterinarian.ENTITY_NAME),
       );
 
     return ok(new Veterinarian({ ...props }));
