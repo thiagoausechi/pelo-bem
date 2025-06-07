@@ -18,7 +18,6 @@ interface PetProps {
   weightKg: number;
   heightCm: number;
   gender: Gender;
-  picture?: string;
 }
 
 export class Pet {
@@ -45,14 +44,12 @@ export class Pet {
     this.weightKg = props.weightKg;
     this.heightCm = props.heightCm;
     this.gender = props.gender;
-    this.picture = props.picture;
   }
 
   public static create(
     props: PetProps,
   ): Result<Pet, EmptyPropertyError | TooLowValueError | TooHighValueError> {
-    const { id, ownerId, name, specie, breed, weightKg, heightCm, picture } =
-      props;
+    const { id, ownerId, name, specie, breed, weightKg, heightCm } = props;
 
     if (id !== undefined && id.length === 0)
       return err(new EmptyPropertyError("ID", Pet.ENTITY_NAME));
@@ -79,9 +76,6 @@ export class Pet {
 
     if (heightCm > Species[specie].heightCm.max)
       return err(new TooHighValueError("Altura", Pet.ENTITY_NAME));
-
-    if (picture !== undefined && picture.length === 0)
-      return err(new EmptyPropertyError("Foto de Perfil", Pet.ENTITY_NAME));
 
     return ok(new Pet({ ...props }));
   }
