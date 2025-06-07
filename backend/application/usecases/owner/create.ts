@@ -22,71 +22,69 @@ interface Request {
 }
 
 export class CreateOwnerUseCase {
+  private _request!: Request;
+
   constructor(private deps: Dependencies) {}
 
   async execute(
     request: Request,
   ): Promise<Result<Entry<Owner>, CreationFailedError>> {
-    const email = Email.create({
-      email: request.email,
-      emailValidator: this.deps.emailValidator,
-    });
+    try {
+      this._request = request;
+      const email = this.getEmail();
+      const phone = this.getPhone();
+      const createdOwner = await this.performCreation({ email, phone });
 
-    if (!email.ok)
-      return err(new CreationFailedError(Owner.ENTITY_NAME, email.error));
+      void this.uploadProfilePicture(createdOwner.id);
 
-    const phone = Phone.create({
-      phone: request.phone,
-      phoneValidator: this.deps.phoneValidator,
-    });
-
-    if (!phone.ok)
-      return err(new CreationFailedError(Owner.ENTITY_NAME, phone.error));
-
-    const owner = Owner.create({
-      ...request,
-      email: email.value,
-      phone: phone.value,
-    });
-
-    if (!owner.ok)
-      return err(new CreationFailedError(Owner.ENTITY_NAME, owner.error));
-
-    const createdOwner = await this.deps.ownerGateway.create(owner.value);
-
-    if (!createdOwner.ok)
-      return err(
-        new CreationFailedError(Owner.ENTITY_NAME, createdOwner.error),
-      );
-
-    void this.uploadProfilePicture(
-      createdOwner.value.id,
-      request.profilePicture,
-    );
-
-    return ok(createdOwner.value);
+      return ok(createdOwner);
+    } catch (error) {
+      return err(new CreationFailedError(Owner.ENTITY_NAME, error as Error));
+    }
   }
 
-  private async uploadProfilePicture(
-    ownerId: string,
-    profilePicture?: Buffer,
-  ): Promise<Result<string, CreationFailedError>> {
-    if (!profilePicture)
-      return err(new CreationFailedError("imagem de perfil do cuidador"));
+  private getEmail() {
+    const email = Email.create({
+      email: this._request.email,
+      emailValidator: this.deps.emailValidator,
+    });
+    if (!email.ok) throw email.error;
 
-    const uploadResult = await this.deps.fileStorage.upload({
-      file: profilePicture,
+    return email.value;
+  }
+
+  private getPhone() {
+    const phone = Phone.create({
+      phone: this._request.phone,
+      phoneValidator: this.deps.phoneValidator,
+    });
+    if (!phone.ok) throw phone.error;
+
+    return phone.value;
+  }
+
+  private async performCreation({
+    email,
+    phone,
+  }: {
+    email: Email;
+    phone: Phone;
+  }) {
+    const owner = Owner.create({ ...this._request, email, phone });
+    if (!owner.ok) throw owner.error;
+
+    const createdOwner = await this.deps.ownerGateway.create(owner.value);
+    if (!createdOwner.ok) throw createdOwner.error;
+
+    return createdOwner.value;
+  }
+
+  private async uploadProfilePicture(ownerId: string) {
+    if (!this._request.profilePicture) return;
+
+    await this.deps.fileStorage.upload({
+      file: this._request.profilePicture,
       path: `owners/${ownerId}/profile-picture`,
     });
-
-    if (!uploadResult.ok)
-      return err(
-        new CreationFailedError(
-          "imagem de perfil do cuidador",
-          uploadResult.error,
-        ),
-      );
-
-    return ok(uploadResult.value);
   }
 }
