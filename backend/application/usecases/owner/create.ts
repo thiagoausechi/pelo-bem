@@ -1,6 +1,7 @@
 import { err, ok, type Result } from "@core/result";
 import type { OwnerGateway } from "@server/application/gateways";
 import type { Entry } from "@server/application/gateways/base/entry";
+import type { FileStorageGateway } from "@server/application/gateways/file-storage";
 import { Owner } from "@server/domain/entities/owner";
 import { Email, type EmailValidator } from "@server/domain/value-objects/email";
 import { Phone, type PhoneValidator } from "@server/domain/value-objects/phone";
@@ -10,13 +11,14 @@ interface Dependencies {
   ownerGateway: OwnerGateway;
   emailValidator: EmailValidator;
   phoneValidator: PhoneValidator;
+  fileStorage: FileStorageGateway;
 }
 
 interface Request {
   fullname: string;
   email: string;
   phone: string;
-  profilePicture?: string;
+  profilePicture?: Buffer;
 }
 
 export class CreateOwnerUseCase {
@@ -57,6 +59,34 @@ export class CreateOwnerUseCase {
         new CreationFailedError(Owner.ENTITY_NAME, createdOwner.error),
       );
 
+    void this.uploadProfilePicture(
+      createdOwner.value.id,
+      request.profilePicture,
+    );
+
     return ok(createdOwner.value);
+  }
+
+  private async uploadProfilePicture(
+    ownerId: string,
+    profilePicture?: Buffer,
+  ): Promise<Result<string, CreationFailedError>> {
+    if (!profilePicture)
+      return err(new CreationFailedError("imagem de perfil do cuidador"));
+
+    const uploadResult = await this.deps.fileStorage.upload({
+      file: profilePicture,
+      path: `owners/${ownerId}/profile-picture`,
+    });
+
+    if (!uploadResult.ok)
+      return err(
+        new CreationFailedError(
+          "imagem de perfil do cuidador",
+          uploadResult.error,
+        ),
+      );
+
+    return ok(uploadResult.value);
   }
 }
