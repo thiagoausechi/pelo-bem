@@ -13,7 +13,9 @@ export interface Gateway<
   create(
     entity: TEntity,
   ): Promise<Result<TStoredEntity, EntryAlreadyExistsError>>;
-  update(entity: TStoredEntity): Promise<Result<TStoredEntity, NotFoundError>>;
+  update(
+    entity: Partial<TStoredEntity> & { id: string },
+  ): Promise<Result<TStoredEntity, NotFoundError>>;
   listAll(filters?: TFilters): Promise<TStoredEntity[]>;
   findBy(filters: TFilters): Promise<Result<TStoredEntity, NotFoundError>>;
   count(filters?: TFilters): Promise<number>;
