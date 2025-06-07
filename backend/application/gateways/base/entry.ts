@@ -1,3 +1,5 @@
+import type { Range } from "@core/range";
+
 /**
  * Uma `Entry` é a representação de um registro
  * comum em um repositório de dados. Em termos gerais,
@@ -19,7 +21,7 @@ export type Entry<T> = T & {
 export type EntrySearchParams<T> = Partial<
   T & {
     id: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Range<Date>;
+    updatedAt: Range<Date>;
   }
 >;
