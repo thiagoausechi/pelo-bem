@@ -1,7 +1,7 @@
 import { ratings } from "@server/domain/entities/service-order";
 import { relations } from "drizzle-orm";
 import { pgEnum, text, uuid } from "drizzle-orm/pg-core";
-import { appSchema, baseSchema } from "./schema";
+import { appSchema, baseSchema } from "./base";
 import { serviceOrders } from "./service-order";
 
 export const ratingEnum = pgEnum("rating", ratings);

@@ -1,5 +1,5 @@
 import { text } from "drizzle-orm/pg-core";
-import { appSchema, baseSchema } from "./schema";
+import { appSchema, baseSchema } from "./base";
 
 export const veterinarians = appSchema.table("veterinarians", {
   ...baseSchema,
