@@ -1,7 +1,12 @@
+import { genders, species } from "@server/domain/entities/pet";
 import { relations } from "drizzle-orm";
-import { smallint, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, smallint, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { owners } from "./owner";
 import { appSchema, baseSchema } from "./schema";
+
+export const specieEnum = pgEnum("personality", species);
+
+export const genderEnum = pgEnum("gender", genders);
 
 export const pets = appSchema.table("pets", {
   ...baseSchema,
@@ -10,12 +15,12 @@ export const pets = appSchema.table("pets", {
     .notNull()
     .references(() => owners.id, { onDelete: "cascade", onUpdate: "cascade" }),
   name: text("name").notNull(),
-  specie: text("specie").notNull(),
+  specie: specieEnum("specie").notNull(),
   breed: text("breed").notNull(),
   birthday: timestamp("birthday", { mode: "date" }).notNull(),
   weightGrams: smallint("weight_grams").notNull(),
   heightCm: smallint("height_cm").notNull(),
-  gender: text("gender").notNull(),
+  gender: genderEnum("gender").notNull(),
 });
 
 export const petsRelations = relations(pets, ({ one }) => ({
