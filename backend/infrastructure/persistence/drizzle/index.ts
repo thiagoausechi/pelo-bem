@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 import { env } from "@server/infrastructure/configs/env";
-import { schema } from "./models/schema";
+import * as schema from "./models/schema";
 
 /**
  * Armazena em cache a conexão com o banco de dados durante o desenvolvimento.
