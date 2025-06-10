@@ -7,13 +7,23 @@ export type FiltersFor<TEntity extends object> = Partial<
   TransformToRange<TEntity>
 >;
 
-export interface BaseGateway<TEntity extends object> {
-  create(entity: TEntity): Promise<Result<TEntity, EntryAlreadyExistsError>>;
+/**
+ * Representa um registro de uma entidade no sistema.
+ * Inclui propriedades concretas comuns como `id`, `createdAt` e `updatedAt`.
+ */
+export type Entry<T extends object> = T & {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export interface BaseGateway<TEntity extends object, TEntry = Entry<TEntity>> {
+  create(entity: TEntity): Promise<Result<TEntry, EntryAlreadyExistsError>>;
   update(
     entity: Partial<TEntity> & { id: string },
-  ): Promise<Result<TEntity, NotFoundError>>;
-  listAll(filters?: FiltersFor<TEntity>): Promise<TEntity[]>;
-  findBy(filters: FiltersFor<TEntity>): Promise<Result<TEntity, NotFoundError>>;
+  ): Promise<Result<TEntry, NotFoundError>>;
+  listAll(filters?: FiltersFor<TEntity>): Promise<TEntry[]>;
+  findBy(filters: FiltersFor<TEntity>): Promise<Result<TEntry, NotFoundError>>;
   count(filters?: FiltersFor<TEntity>): Promise<number>;
   existsBy(filters: FiltersFor<TEntity>): Promise<boolean>;
 }

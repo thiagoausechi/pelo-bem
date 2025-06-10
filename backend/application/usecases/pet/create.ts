@@ -1,7 +1,7 @@
 import { err, ok, type Result } from "@core/result";
 import { NotFoundError } from "@server/application/errors/not-found";
 import type { OwnerGateway, PetGateway } from "@server/application/gateways";
-import type { Entry } from "@server/application/gateways/base/entry";
+import type { Entry } from "@server/application/gateways/base/gateway";
 import type { FileStorageGateway } from "@server/application/gateways/file-storage";
 import { Owner } from "@server/domain/entities/owner";
 import { type Gender, Pet, type Specie } from "@server/domain/entities/pet";

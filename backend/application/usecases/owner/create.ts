@@ -1,6 +1,6 @@
 import { err, ok, type Result } from "@core/result";
 import type { OwnerGateway } from "@server/application/gateways";
-import type { Entry } from "@server/application/gateways/base/entry";
+import type { Entry } from "@server/application/gateways/base/gateway";
 import type { FileStorageGateway } from "@server/application/gateways/file-storage";
 import { Owner } from "@server/domain/entities/owner";
 import { Email, type EmailValidator } from "@server/domain/value-objects/email";
