@@ -1,4 +1,13 @@
-export const Genders = {
+export const genders = ["MALE", "FEMALE"] as const;
+
+export type Gender = (typeof genders)[number];
+
+export interface GenderInfo {
+  id: string;
+  label: string;
+}
+
+export const GendersInfo: Record<Gender, GenderInfo> = {
   MALE: {
     id: "male",
     label: "masculino",
@@ -8,6 +17,3 @@ export const Genders = {
     label: "feminino",
   },
 } as const;
-Object.freeze(Genders);
-
-export type Gender = keyof typeof Genders;
