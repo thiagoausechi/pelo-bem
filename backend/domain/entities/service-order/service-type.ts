@@ -3,24 +3,24 @@ import {
   EmptyPropertyError,
   NegativePropertyError,
 } from "@server/domain/errors";
+import { BaseEntity, type BaseEntityProps } from "../base";
 
-interface ServiceTypeProps {
-  id?: string;
+interface ServiceTypeProps extends BaseEntityProps {
   name: string;
   description: string;
   price: number;
 }
 
-export class ServiceType {
+export class ServiceType extends BaseEntity {
   public static readonly ENTITY_NAME = "tipo de serviço";
 
-  public readonly id?: string;
   public readonly name: string;
   public readonly description: string;
   public readonly price: number;
 
   private constructor(props: ServiceTypeProps) {
-    this.id = props.id;
+    super(ServiceType.ENTITY_NAME, props);
+
     this.name = props.name;
     this.description = props.description;
     this.price = props.price;
@@ -29,10 +29,7 @@ export class ServiceType {
   public static create(
     props: ServiceTypeProps,
   ): Result<ServiceType, EmptyPropertyError | NegativePropertyError> {
-    const { id, name, description, price } = props;
-
-    if (id !== undefined && id.length === 0)
-      return err(new EmptyPropertyError("ID", ServiceType.ENTITY_NAME));
+    const { name, description, price } = props;
 
     if (name.length === 0)
       return err(new EmptyPropertyError("Nome", ServiceType.ENTITY_NAME));
@@ -43,6 +40,7 @@ export class ServiceType {
     if (price <= 0)
       return err(new NegativePropertyError("Preço", ServiceType.ENTITY_NAME));
 
-    return ok(new ServiceType({ ...props }));
+    const serviceType = new ServiceType(props);
+    return serviceType.validate() ?? ok(serviceType);
   }
 }
