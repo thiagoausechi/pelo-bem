@@ -6,7 +6,7 @@ import {
 } from "@server/domain/errors";
 import { Owner } from "../owner";
 import type { Gender } from "./gender.enum";
-import { Species, type Specie } from "./species.enum";
+import { SpeciesInfo, type Specie } from "./species.enum";
 
 interface PetProps {
   id?: string;
@@ -65,16 +65,16 @@ export class Pet {
     if (breed.length === 0)
       return err(new EmptyPropertyError("Raça", Pet.ENTITY_NAME));
 
-    if (weightKg < Species[specie].weightKg.min)
+    if (weightKg < SpeciesInfo[specie].weightKg.min)
       return err(new TooLowValueError("Peso", Pet.ENTITY_NAME));
 
-    if (weightKg > Species[specie].weightKg.max)
+    if (weightKg > SpeciesInfo[specie].weightKg.max)
       return err(new TooHighValueError("Peso", Pet.ENTITY_NAME));
 
-    if (heightCm < Species[specie].heightCm.min)
+    if (heightCm < SpeciesInfo[specie].heightCm.min)
       return err(new TooLowValueError("Altura", Pet.ENTITY_NAME));
 
-    if (heightCm > Species[specie].heightCm.max)
+    if (heightCm > SpeciesInfo[specie].heightCm.max)
       return err(new TooHighValueError("Altura", Pet.ENTITY_NAME));
 
     return ok(new Pet({ ...props }));
