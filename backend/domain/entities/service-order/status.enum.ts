@@ -1,17 +1,22 @@
-export const ServiceOrderStatuses = {
+export const serviceOrderStatus = ["PENDING", "COMPLETED", "CANCELED"] as const;
+
+export type ServiceOrderStatus = (typeof serviceOrderStatus)[number];
+
+export interface ServiceOrderStatusInfo {
+  label: string;
+}
+
+export const ServiceOrderStatusesInfo: Record<
+  ServiceOrderStatus,
+  ServiceOrderStatusInfo
+> = {
   PENDING: {
-    id: "pending",
     label: "Pendente",
   },
   COMPLETED: {
-    id: "completed",
     label: "Concluída",
   },
   CANCELED: {
-    id: "canceled",
     label: "Cancelada",
   },
 } as const;
-Object.freeze(ServiceOrderStatuses);
-
-export type ServiceOrderStatus = keyof typeof ServiceOrderStatuses;
