@@ -7,6 +7,9 @@ import type {
   FiltersFor,
 } from "@server/application/gateways/base/gateway";
 import type { Owner } from "@server/domain/entities/owner";
+import { db } from "..";
+import { owners } from "../models/owner";
+import { parseFilters } from "./parse-filters";
 
 export class PgOwnerGateway implements OwnerGateway {
   async create(
@@ -36,6 +39,12 @@ export class PgOwnerGateway implements OwnerGateway {
   }
 
   async existsBy(filters: FiltersFor<Owner>): Promise<boolean> {
-    throw new Error("Method not implemented.");
+    const result = await db
+      .select({ id: owners.id })
+      .from(owners)
+      .where(parseFilters({ filters, table: owners }))
+      .limit(1);
+
+    return result.length > 0;
   }
 }
