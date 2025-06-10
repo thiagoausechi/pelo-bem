@@ -1,24 +1,24 @@
 import { err, ok, type Result } from "@core/result";
 import { EmptyPropertyError } from "@server/domain/errors";
+import { BaseEntity, type BaseEntityProps } from "../base";
 import type { Rating } from "./rating.enum";
 
-interface SatisfactionProps {
-  id?: string;
+interface SatisfactionProps extends BaseEntityProps {
   serviceOrderId: string;
   rating: Rating;
   comment?: string;
 }
 
-export class Satisfaction {
+export class Satisfaction extends BaseEntity {
   public static readonly ENTITY_NAME = "satisfação";
 
-  public readonly id?: string;
   public readonly serviceOrderId: string;
   public readonly rating: Rating;
   public readonly comment?: string;
 
   private constructor(props: SatisfactionProps) {
-    this.id = props.id;
+    super(Satisfaction.ENTITY_NAME, props);
+
     this.serviceOrderId = props.serviceOrderId;
     this.rating = props.rating;
     this.comment = props.comment;
@@ -27,10 +27,7 @@ export class Satisfaction {
   public static create(
     props: SatisfactionProps,
   ): Result<Satisfaction, EmptyPropertyError> {
-    const { id, serviceOrderId } = props;
-
-    if (id !== undefined && id.length === 0)
-      return err(new EmptyPropertyError("ID", Satisfaction.ENTITY_NAME));
+    const { serviceOrderId } = props;
 
     if (serviceOrderId.length === 0)
       return err(
@@ -40,6 +37,7 @@ export class Satisfaction {
         ),
       );
 
-    return ok(new Satisfaction({ ...props }));
+    const satisfaction = new Satisfaction(props);
+    return satisfaction.validate() ?? ok(satisfaction);
   }
 }
