@@ -8,7 +8,13 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z.string().url(),
-    DATABASE_SCHEMA: z.string(),
+    DATABASE_SCHEMA: z
+      .string()
+      .optional()
+      .refine((val) => val !== "public", {
+        message:
+          'O Postgres usa o schema "public" por padrão. Você pode omitir essa variável de ambiente se não estiver usando outro schema.',
+      }),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
