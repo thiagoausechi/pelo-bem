@@ -24,21 +24,19 @@ export type Range<T = number> =
  * //   age: Range<number>;
  * //   birthDate: Range<Date>;
  * //   preferences: {
- * //     height: Range<number>;
- * //     weight: Range<number>;
+ * //     height: number; -> Aninhamento não é suportado
+ * //     weight: number;
  * //   };
  * // }
  * ```
  */
-export type DeepTransformToRange<T> = T extends object
-  ? {
-      [K in keyof T]: T[K] extends number
-        ? Range<number>
-        : T[K] extends Date
-          ? Range<Date>
-          : DeepTransformToRange<T[K]>;
-    }
-  : T;
+export type TransformToRange<T extends object> = {
+  [K in keyof T]: T[K] extends number
+    ? Range<number>
+    : T[K] extends Date
+      ? Range<Date>
+      : T[K];
+};
 
 /**
  * @description Verifica se um valor está dentro de um intervalo.
