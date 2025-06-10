@@ -2,6 +2,7 @@ import { env } from "@server/infrastructure/configs/env";
 import { pgSchema, timestamp, uuid } from "drizzle-orm/pg-core";
 import { owners } from "./owner";
 import { genderEnum, pets, petsRelations, specieEnum } from "./pet";
+import { serviceType } from "./service-type";
 import { veterinarians } from "./veterinarians";
 
 export const appSchema = pgSchema(env.DATABASE_SCHEMA);
@@ -22,5 +23,6 @@ export const schema = {
   genderEnum,
   pets,
   veterinarians,
+  serviceType,
   petsRelations,
 };
