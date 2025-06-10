@@ -4,12 +4,12 @@ import {
   TooHighValueError,
   TooLowValueError,
 } from "@server/domain/errors";
+import { BaseEntity, type BaseEntityProps } from "../base";
 import { Owner } from "../owner";
 import type { Gender } from "./gender.enum";
 import { SpeciesInfo, type Specie } from "./species.enum";
 
-interface PetProps {
-  id?: string;
+interface PetProps extends BaseEntityProps {
   ownerId: string;
   name: string;
   specie: Specie;
@@ -20,10 +20,9 @@ interface PetProps {
   gender: Gender;
 }
 
-export class Pet {
+export class Pet extends BaseEntity {
   public static readonly ENTITY_NAME = "animal de estimação";
 
-  public readonly id?: string;
   public readonly ownerId: string;
   public readonly name: string;
   public readonly specie: Specie;
@@ -35,7 +34,8 @@ export class Pet {
   public readonly picture?: string;
 
   private constructor(props: PetProps) {
-    this.id = props.id;
+    super(Pet.ENTITY_NAME, props);
+
     this.ownerId = props.ownerId;
     this.name = props.name;
     this.specie = props.specie;
@@ -49,10 +49,7 @@ export class Pet {
   public static create(
     props: PetProps,
   ): Result<Pet, EmptyPropertyError | TooLowValueError | TooHighValueError> {
-    const { id, ownerId, name, specie, breed, weightKg, heightCm } = props;
-
-    if (id !== undefined && id.length === 0)
-      return err(new EmptyPropertyError("ID", Pet.ENTITY_NAME));
+    const { ownerId, name, specie, breed, weightKg, heightCm } = props;
 
     if (ownerId.length === 0)
       return err(
@@ -77,6 +74,7 @@ export class Pet {
     if (heightCm > SpeciesInfo[specie].heightCm.max)
       return err(new TooHighValueError("Altura", Pet.ENTITY_NAME));
 
-    return ok(new Pet({ ...props }));
+    const pet = new Pet(props);
+    return pet.validate() ?? ok(pet);
   }
 }
