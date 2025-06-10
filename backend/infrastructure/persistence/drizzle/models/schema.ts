@@ -3,6 +3,11 @@ import { pgSchema, timestamp, uuid } from "drizzle-orm/pg-core";
 import { owners } from "./owner";
 import { genderEnum, pets, petsRelations, specieEnum } from "./pet";
 import {
+  ratingEnum,
+  satisfaction,
+  satisfactionRelations,
+} from "./satisfaction";
+import {
   serviceOrders,
   serviceOrdersRelations,
   statusEnum,
@@ -40,4 +45,7 @@ export const schema = {
   statusEnum,
   serviceOrders,
   serviceOrdersRelations,
+  ratingEnum,
+  satisfaction,
+  satisfactionRelations,
 };
