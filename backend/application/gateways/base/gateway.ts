@@ -1,23 +1,19 @@
+import type { DeepTransformToRange } from "@core/range";
 import type { Result } from "@core/result";
 import type { NotFoundError } from "@server/application/errors/not-found";
-import type { Entry, EntrySearchParams } from "./entry";
 import type { EntryAlreadyExistsError } from "./entry-already-exists";
 
-export interface Gateway<
-  TEntity,
-  TSearchParams extends Record<string, unknown>,
+export interface BaseGateway<
+  TEntity extends object,
   TFilters extends
-    EntrySearchParams<TSearchParams> = EntrySearchParams<TSearchParams>,
-  TStoredEntity extends Entry<TEntity> = Entry<TEntity>,
+    DeepTransformToRange<TEntity> = DeepTransformToRange<TEntity>,
 > {
-  create(
-    entity: TEntity,
-  ): Promise<Result<TStoredEntity, EntryAlreadyExistsError>>;
+  create(entity: TEntity): Promise<Result<TEntity, EntryAlreadyExistsError>>;
   update(
-    entity: Partial<TStoredEntity> & { id: string },
-  ): Promise<Result<TStoredEntity, NotFoundError>>;
-  listAll(filters?: TFilters): Promise<TStoredEntity[]>;
-  findBy(filters: TFilters): Promise<Result<TStoredEntity, NotFoundError>>;
+    entity: Partial<TEntity> & { id: string },
+  ): Promise<Result<TEntity, NotFoundError>>;
+  listAll(filters?: TFilters): Promise<TEntity[]>;
+  findBy(filters: TFilters): Promise<Result<TEntity, NotFoundError>>;
   count(filters?: TFilters): Promise<number>;
   existsBy(filters: TFilters): Promise<boolean>;
 }

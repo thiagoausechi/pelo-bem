@@ -1,14 +1,4 @@
 import type { Veterinarian } from "@server/domain/entities/veterinarian";
-import type { Gateway } from "./base/gateway";
+import type { BaseGateway } from "./base/gateway";
 
-export type SearchVeterinarianParams = {
-  fullname: string;
-  licenseNumber: string;
-  email: string;
-  phone: string;
-};
-
-export type VeterinarianGateway = Gateway<
-  Veterinarian,
-  SearchVeterinarianParams
->;
+export type VeterinarianGateway = BaseGateway<Veterinarian>;
