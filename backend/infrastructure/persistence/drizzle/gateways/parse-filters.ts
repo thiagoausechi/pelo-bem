@@ -26,8 +26,15 @@ export function parseFilters<TEntity extends object>(params: {
   Object.entries(filters).forEach(([key, value]) => {
     const column = table[key] as Column;
 
-    if (typeof value === "string") return conditions.push(ilike(column, value));
     if (typeof value === "number") return conditions.push(eq(column, value));
+
+    if (typeof value === "string") {
+      // UUID é tratado como string, mas deve ser comparado com eq
+      if (value.length === 36 && value.includes("-"))
+        return conditions.push(eq(column, value));
+
+      return conditions.push(ilike(column, `%${value}%`));
+    }
 
     if (value && typeof value === "object") {
       // Verifica se o valor tem um ID
