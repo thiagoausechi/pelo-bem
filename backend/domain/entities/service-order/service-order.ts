@@ -1,12 +1,12 @@
 import { err, ok, type Result } from "@core/result";
 import { EmptyPropertyError } from "@server/domain/errors";
+import { BaseEntity, type BaseEntityProps } from "../base";
 import { Pet } from "../pet";
 import { Veterinarian } from "../veterinarian";
 import type { ServiceType } from "./service-type";
 import type { ServiceOrderStatus } from "./status.enum";
 
-interface ServiceOrderProps {
-  id?: string;
+interface ServiceOrderProps extends BaseEntityProps {
   petId: string;
   veterinarianId: string;
   serviceType: ServiceType;
@@ -14,10 +14,9 @@ interface ServiceOrderProps {
   status: ServiceOrderStatus;
 }
 
-export class ServiceOrder {
+export class ServiceOrder extends BaseEntity {
   public static readonly ENTITY_NAME = "ordem de serviço";
 
-  public readonly id?: string;
   public readonly petId: string;
   public readonly veterinarianId: string;
   public readonly serviceType: ServiceType;
@@ -25,7 +24,8 @@ export class ServiceOrder {
   public readonly status: ServiceOrderStatus;
 
   private constructor(props: ServiceOrderProps) {
-    this.id = props.id;
+    super(ServiceOrder.ENTITY_NAME, props);
+
     this.petId = props.petId;
     this.veterinarianId = props.veterinarianId;
     this.serviceType = props.serviceType;
@@ -36,10 +36,7 @@ export class ServiceOrder {
   public static create(
     props: ServiceOrderProps,
   ): Result<ServiceOrder, EmptyPropertyError> {
-    const { id, petId, veterinarianId } = props;
-
-    if (id !== undefined && id.length === 0)
-      return err(new EmptyPropertyError("ID", ServiceOrder.ENTITY_NAME));
+    const { petId, veterinarianId } = props;
 
     if (petId.length === 0)
       return err(
@@ -57,6 +54,7 @@ export class ServiceOrder {
         ),
       );
 
-    return ok(new ServiceOrder({ ...props }));
+    const serviceOrder = new ServiceOrder(props);
+    return serviceOrder.validate() ?? ok(serviceOrder);
   }
 }
