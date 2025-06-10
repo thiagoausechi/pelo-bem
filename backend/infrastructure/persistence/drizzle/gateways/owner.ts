@@ -7,6 +7,7 @@ import type {
   FiltersFor,
 } from "@server/application/gateways/base/gateway";
 import type { Owner } from "@server/domain/entities/owner";
+import { count } from "drizzle-orm";
 import { db } from "..";
 import { owners } from "../models/owner";
 import { parseFilters } from "./parse-filters";
@@ -35,7 +36,12 @@ export class PgOwnerGateway implements OwnerGateway {
   }
 
   async count(filters?: FiltersFor<Owner>): Promise<number> {
-    throw new Error("Method not implemented.");
+    const result = await db
+      .select({ count: count() })
+      .from(owners)
+      .where(parseFilters({ filters, table: owners }));
+
+    return result[0]?.count ?? 0;
   }
 
   async existsBy(filters: FiltersFor<Owner>): Promise<boolean> {
