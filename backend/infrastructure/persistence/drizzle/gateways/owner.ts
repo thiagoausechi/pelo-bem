@@ -1,18 +1,36 @@
-import type { Result } from "@core/result";
-import type { NotFoundError } from "@server/application/errors/not-found";
+import { err, ok, type Result } from "@core/result";
+import { NotFoundError } from "@server/application/errors/not-found";
+import { UnexpectedError } from "@server/application/errors/unexpected";
 import type { OwnerGateway } from "@server/application/gateways";
 import type { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
 import type {
   Entry,
   FiltersFor,
 } from "@server/application/gateways/base/gateway";
-import type { Owner } from "@server/domain/entities/owner";
+import { Owner } from "@server/domain/entities/owner";
+import type { EmailValidator } from "@server/domain/value-objects/email";
+import type { PhoneValidator } from "@server/domain/value-objects/phone";
 import { count } from "drizzle-orm";
 import { db } from "..";
+import { PgOwnerMapper } from "../mappers/owner";
 import { owners } from "../models/owner";
 import { parseFilters } from "./parse-filters";
 
+interface Dependencies {
+  emailValidator: EmailValidator;
+  phoneValidator: PhoneValidator;
+}
+
 export class PgOwnerGateway implements OwnerGateway {
+  private mapper: PgOwnerMapper;
+
+  constructor(deps: Dependencies) {
+    this.mapper = new PgOwnerMapper({
+      emailValidator: deps.emailValidator,
+      phoneValidator: deps.phoneValidator,
+    });
+  }
+
   async create(
     entity: Owner,
   ): Promise<Result<Entry<Owner>, EntryAlreadyExistsError>> {
@@ -31,8 +49,26 @@ export class PgOwnerGateway implements OwnerGateway {
 
   async findBy(
     filters: FiltersFor<Owner>,
-  ): Promise<Result<Entry<Owner>, NotFoundError>> {
-    throw new Error("Method not implemented.");
+  ): Promise<Result<Entry<Owner>, NotFoundError | UnexpectedError>> {
+    try {
+      const result = await db
+        .select()
+        .from(owners)
+        .where(parseFilters({ filters, table: owners }))
+        .limit(1);
+
+      if (result.length === 0) return err(new NotFoundError(Owner.ENTITY_NAME));
+      const owner = await this.mapper.toEntity(result[0]!);
+
+      return ok(owner as Entry<Owner>);
+    } catch (error) {
+      return err(
+        new UnexpectedError(
+          "Um erro inesperado ocorreu ao tentar encontrar o cuidador",
+          error as Error,
+        ),
+      );
+    }
   }
 
   async count(filters?: FiltersFor<Owner>): Promise<number> {
