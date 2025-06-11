@@ -1,6 +1,10 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+/**
+ * Verifique os detalhes de utilização e configuração
+ * de cada variável de ambiente no arquivo `.env.example`.
+ */
 export const env = createEnv({
   /**
    * Especifique o esquema das variáveis de ambiente do lado do servidor aqui.
