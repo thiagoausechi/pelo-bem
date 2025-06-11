@@ -7,6 +7,9 @@ export const env = createEnv({
    * Assim, você garante que o app não será construído ('build') com variáveis de ambiente inválidas.
    */
   server: {
+    /**===================================================================================================
+     *  Banco de Dados (Drizzle ORM)
+     * =================================================================================================== */
     DATABASE_PROTOCOL: z.string(),
     DATABASE_USER: z.string(),
     DATABASE_PASSWORD: z.string(),
@@ -22,6 +25,10 @@ export const env = createEnv({
         message:
           'O Postgres usa o schema "public" por padrão. Você pode omitir essa variável de ambiente se não estiver usando outro schema.',
       }),
+
+    /**===================================================================================================
+     *  Ambiente de Execução
+     * =================================================================================================== */
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
