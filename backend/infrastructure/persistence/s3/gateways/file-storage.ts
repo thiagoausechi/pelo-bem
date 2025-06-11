@@ -1,6 +1,7 @@
 import {
   DeleteObjectCommand,
   GetObjectCommand,
+  HeadObjectCommand,
   PutObjectCommand,
   type S3Client,
 } from "@aws-sdk/client-s3";
@@ -87,7 +88,28 @@ export class S3FileStorageGateway implements FileStorageGateway {
     }
   }
 
-  exists(path: FilePath): Promise<Result<boolean, UnexpectedError>> {
-    throw new Error("Method not implemented.");
+  async exists(path: FilePath): Promise<Result<boolean, UnexpectedError>> {
+    // HeadObject é a forma mais eficiente de verificar a existência de um objeto
+    const command = new HeadObjectCommand({
+      Bucket: this.bucketName,
+      Key: path,
+    });
+
+    try {
+      await this.s3Client.send(command);
+      // Se o comando for bem-sucedido, o arquivo existe
+      return ok(true);
+    } catch (error) {
+      // Se o erro for de não encontrado, o arquivo não existe
+      if (error instanceof Error && error.name === "NotFound") return ok(false);
+
+      console.error("Erro ao verificar a existência do arquivo no S3:", error);
+      return err(
+        new UnexpectedError(
+          "Erro ao verificar a existência do arquivo",
+          error as Error,
+        ),
+      );
+    }
   }
 }
