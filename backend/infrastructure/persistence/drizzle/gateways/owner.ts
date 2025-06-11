@@ -2,7 +2,7 @@ import { err, ok, type Result } from "@core/result";
 import { NotFoundError } from "@server/application/errors/not-found";
 import { UnexpectedError } from "@server/application/errors/unexpected";
 import type { OwnerGateway } from "@server/application/gateways";
-import type { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
+import { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
 import type {
   Entry,
   FiltersFor,
@@ -35,7 +35,25 @@ export class PgOwnerGateway implements OwnerGateway {
   async create(
     entity: Owner,
   ): Promise<Result<Entry<Owner>, EntryAlreadyExistsError>> {
-    throw new Error("Method not implemented.");
+    try {
+      if (entity.id)
+        if (await this.existsBy({ id: entity.id }))
+          // ^ Não fazemos uma query desnecessária se não houver ID
+          return err(new EntryAlreadyExistsError());
+
+      const row = await db
+        .insert(owners)
+        .values(await this.mapper.toModel(entity))
+        .returning();
+
+      const createdOwner = await this.mapper.toEntity(row[0]!);
+      return ok(createdOwner as Entry<Owner>);
+    } catch (error) {
+      console.error("Erro ao criar o cuidador:", error);
+      return err(
+        new UnexpectedError("Erro ao criar o cuidador", error as Error),
+      );
+    }
   }
 
   async update(
