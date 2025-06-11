@@ -31,6 +31,18 @@ export const env = createEnv({
       }),
 
     /**===================================================================================================
+     *  Armazenamento de Arquivos (S3 File Storage)
+     * =================================================================================================== */
+    S3_BUCKET_NAME: z.string(),
+    S3_REGION: z.string(),
+    S3_ACCESS_KEY_ID: z.string(),
+    S3_SECRET_ACCESS_KEY: z.string(),
+    S3_PUBLIC_URL: z.string().url(),
+    S3_FORCE_PATH_STYLE: z.coerce.boolean().default(false),
+
+    S3_ENDPOINT: z.string().url().optional(), // Necessário para o MinIO, mas não com AWS S3
+
+    /**===================================================================================================
      *  Ambiente de Execução
      * =================================================================================================== */
     NODE_ENV: z
@@ -52,6 +64,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     ...processDatabaseVariables(),
+    ...processFileStorageVariables(),
     NODE_ENV: process.env.NODE_ENV,
   },
 
@@ -87,5 +100,17 @@ function processDatabaseVariables() {
   return {
     ...vars,
     DATABASE_URL,
+  };
+}
+
+function processFileStorageVariables() {
+  return {
+    S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+    S3_REGION: process.env.S3_REGION,
+    S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
+    S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
+    S3_PUBLIC_URL: process.env.S3_PUBLIC_URL,
+    S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE,
+    S3_ENDPOINT: process.env.S3_ENDPOINT,
   };
 }
