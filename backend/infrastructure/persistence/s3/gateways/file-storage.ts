@@ -12,12 +12,15 @@ import type {
   FilePath,
   FileStorageGateway,
 } from "@server/application/gateways/file-storage";
+import { Bucket } from "../bucket";
 
 export class S3FileStorageGateway implements FileStorageGateway {
   constructor(
     private readonly s3Client: S3Client,
     private readonly bucketName: string,
-  ) {}
+  ) {
+    void new Bucket(s3Client, bucketName).initialize();
+  }
 
   async upload(args: {
     file: Buffer;
