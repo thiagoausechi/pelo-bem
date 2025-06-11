@@ -7,6 +7,13 @@ export const env = createEnv({
    * Assim, você garante que o app não será construído ('build') com variáveis de ambiente inválidas.
    */
   server: {
+    DATABASE_PROTOCOL: z.string(),
+    DATABASE_USER: z.string(),
+    DATABASE_PASSWORD: z.string(),
+    DATABASE_HOST: z.string(),
+    DATABASE_PORT: z.string(),
+    DATABASE_NAME: z.string(),
+    DATABASE_PARAMS: z.string().optional(),
     DATABASE_URL: z.string().url(),
     DATABASE_SCHEMA: z
       .string()
@@ -33,8 +40,7 @@ export const env = createEnv({
    * middlewares) ou no lado do cliente, então precisamos desestruturar manualmente.
    */
   runtimeEnv: {
-    DATABASE_URL: process.env.DATABASE_URL,
-    DATABASE_SCHEMA: process.env.DATABASE_SCHEMA,
+    ...processDatabaseVariables(),
     NODE_ENV: process.env.NODE_ENV,
   },
 
@@ -50,3 +56,25 @@ export const env = createEnv({
    */
   emptyStringAsUndefined: true,
 });
+
+function processDatabaseVariables() {
+  const vars = {
+    DATABASE_PROTOCOL: process.env.DATABASE_PROTOCOL,
+    DATABASE_USER: process.env.DATABASE_USER,
+    DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
+    DATABASE_HOST: process.env.DATABASE_HOST,
+    DATABASE_PORT: process.env.DATABASE_PORT,
+    DATABASE_NAME: process.env.DATABASE_NAME,
+    DATABASE_PARAMS: process.env.DATABASE_PARAMS ?? "",
+    DATABASE_SCHEMA: process.env.DATABASE_SCHEMA,
+  };
+
+  const DATABASE_URL =
+    process.env.DATABASE_URL ??
+    `"${vars.DATABASE_PROTOCOL}://${vars.DATABASE_USER}:${vars.DATABASE_PASSWORD}@${vars.DATABASE_HOST}:${vars.DATABASE_PORT}/${vars.DATABASE_NAME}${vars.DATABASE_PARAMS}"`;
+
+  return {
+    ...vars,
+    DATABASE_URL,
+  };
+}
