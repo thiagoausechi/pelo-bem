@@ -6,11 +6,12 @@ import type { EntryAlreadyExistsError } from "@server/application/gateways/base/
 import type {
   Entry,
   FiltersFor,
+  ListOptions,
 } from "@server/application/gateways/base/gateway";
 import { Owner } from "@server/domain/entities/owner";
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
-import { count } from "drizzle-orm";
+import { asc, count, desc } from "drizzle-orm";
 import { db } from "..";
 import { PgOwnerMapper } from "../mappers/owner";
 import { owners } from "../models/owner";
@@ -43,8 +44,37 @@ export class PgOwnerGateway implements OwnerGateway {
     throw new Error("Method not implemented.");
   }
 
-  async listAll(filters?: FiltersFor<Owner>): Promise<Entry<Owner>[]> {
-    throw new Error("Method not implemented.");
+  async listAll(
+    filters?: FiltersFor<Owner>,
+    options?: ListOptions<keyof Owner>,
+  ): Promise<Entry<Owner>[]> {
+    try {
+      const result = await db.query.owners.findMany({
+        limit: options?.limit ?? 10,
+        offset: options?.offset ?? 0,
+        where: parseFilters({ filters, table: owners }),
+        orderBy: options?.orderBy
+          ? [
+              options.orderDirection === "desc"
+                ? desc(owners[options.orderBy])
+                : asc(owners[options.orderBy]),
+            ]
+          : [
+              options?.orderDirection === "desc"
+                ? desc(owners.createdAt)
+                : asc(owners.createdAt),
+            ],
+      });
+
+      const entries = await Promise.all(
+        result.map((row) => this.mapper.toEntity(row) as Promise<Entry<Owner>>),
+      );
+
+      return entries;
+    } catch (error) {
+      console.error("Erro ao listar cuidadores:", error);
+      return [];
+    }
   }
 
   async findBy(
