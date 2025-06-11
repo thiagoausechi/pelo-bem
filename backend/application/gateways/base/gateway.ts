@@ -17,12 +17,22 @@ export type Entry<T extends object> = T & {
   updatedAt: Date;
 };
 
+export interface ListOptions<TOrderByKey> {
+  limit?: number;
+  offset?: number;
+  orderBy?: TOrderByKey;
+  orderDirection?: "asc" | "desc";
+}
+
 export interface BaseGateway<TEntity extends object, TEntry = Entry<TEntity>> {
   create(entity: TEntity): Promise<Result<TEntry, EntryAlreadyExistsError>>;
   update(
     entity: Partial<TEntity> & { id: string },
   ): Promise<Result<TEntry, NotFoundError>>;
-  listAll(filters?: FiltersFor<TEntity>): Promise<TEntry[]>;
+  listAll(
+    filters?: FiltersFor<TEntity>,
+    options?: ListOptions<keyof TEntity>,
+  ): Promise<TEntry[]>;
   findBy(filters: FiltersFor<TEntity>): Promise<Result<TEntry, NotFoundError>>;
   count(filters?: FiltersFor<TEntity>): Promise<number>;
   existsBy(filters: FiltersFor<TEntity>): Promise<boolean>;
