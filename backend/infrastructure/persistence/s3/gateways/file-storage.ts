@@ -1,4 +1,5 @@
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   type S3Client,
@@ -69,8 +70,21 @@ export class S3FileStorageGateway implements FileStorageGateway {
     }
   }
 
-  delete(path: FilePath): Promise<Result<void, UnexpectedError>> {
-    throw new Error("Method not implemented.");
+  async delete(path: FilePath): Promise<Result<void, UnexpectedError>> {
+    const command = new DeleteObjectCommand({
+      Bucket: this.bucketName,
+      Key: path,
+    });
+
+    try {
+      await this.s3Client.send(command);
+      return ok(undefined);
+    } catch (error) {
+      console.error("Erro ao deletar o arquivo do S3:", error);
+      return err(
+        new UnexpectedError("Erro ao deletar o arquivo", error as Error),
+      );
+    }
   }
 
   exists(path: FilePath): Promise<Result<boolean, UnexpectedError>> {
