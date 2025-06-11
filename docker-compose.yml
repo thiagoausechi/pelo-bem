@@ -14,6 +14,22 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: always
 
+  minio:
+    image: minio/minio:latest
+    container_name: ${S3_BUCKET_NAME}-minio
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY}
+    ports:
+      - "9000:9000" # Porta da API S3
+      - "9001:9001" # Porta da Interface Web do MinIO
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    restart: always
+
 volumes:
   postgres_data:
+    driver: local
+  minio_data:
     driver: local
