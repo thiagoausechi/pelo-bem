@@ -95,7 +95,7 @@ function processDatabaseVariables() {
 
   const DATABASE_URL =
     process.env.DATABASE_URL ??
-    `"${vars.DATABASE_PROTOCOL}://${vars.DATABASE_USER}:${vars.DATABASE_PASSWORD}@${vars.DATABASE_HOST}:${vars.DATABASE_PORT}/${vars.DATABASE_NAME}${vars.DATABASE_PARAMS}"`;
+    `${vars.DATABASE_PROTOCOL}://${vars.DATABASE_USER}:${vars.DATABASE_PASSWORD}@${vars.DATABASE_HOST}:${vars.DATABASE_PORT}/${vars.DATABASE_NAME}${vars.DATABASE_PARAMS}`;
 
   return {
     ...vars,
