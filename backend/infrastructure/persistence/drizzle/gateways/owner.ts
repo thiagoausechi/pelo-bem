@@ -11,7 +11,7 @@ import type {
 import { Owner } from "@server/domain/entities/owner";
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
-import { asc, count, desc } from "drizzle-orm";
+import { asc, count, desc, eq } from "drizzle-orm";
 import { db } from "..";
 import { PgOwnerMapper } from "../mappers/owner";
 import { owners } from "../models/owner";
@@ -59,7 +59,23 @@ export class PgOwnerGateway implements OwnerGateway {
   async update(
     entity: Partial<Owner> & { id: string },
   ): Promise<Result<Entry<Owner>, NotFoundError>> {
-    throw new Error("Method not implemented.");
+    try {
+      const row = await db
+        .update(owners)
+        .set(await this.mapper.toPartialModel(entity))
+        .where(eq(owners.id, entity.id))
+        .returning();
+
+      if (row.length === 0) return err(new NotFoundError(Owner.ENTITY_NAME));
+
+      const updatedOwner = await this.mapper.toEntity(row[0]!);
+      return ok(updatedOwner as Entry<Owner>);
+    } catch (error) {
+      console.error("Erro ao atualizar o cuidador:", error);
+      return err(
+        new UnexpectedError("Erro ao atualizar o cuidador", error as Error),
+      );
+    }
   }
 
   async listAll(
