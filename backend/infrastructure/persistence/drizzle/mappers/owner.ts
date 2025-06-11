@@ -22,6 +22,19 @@ export class PgOwnerMapper {
     };
   }
 
+  async toPartialModel(
+    entity: Partial<Owner> & { id: string },
+  ): Promise<Partial<PgOwnerInsertModel>> {
+    return {
+      id: entity.id,
+      fullname: entity.fullname,
+      email: entity.email?.get(),
+      phone: entity.phone?.get(),
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    };
+  }
+
   async toEntity(model: PgOwnerModel): Promise<Owner> {
     const email = Email.create({
       email: model.email,
