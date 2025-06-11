@@ -1,12 +1,12 @@
 import { genders, species } from "@server/domain/entities/pet";
 import { relations } from "drizzle-orm";
-import { pgEnum, smallint, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { smallint, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
 import { owners } from "./owner";
 
-export const specieEnum = pgEnum("personality", species);
+export const specieEnum = appSchema.enum("personality", species);
 
-export const genderEnum = pgEnum("gender", genders);
+export const genderEnum = appSchema.enum("gender", genders);
 
 export const pets = appSchema.table("pets", {
   ...baseSchema,

@@ -1,12 +1,12 @@
 import { serviceOrderStatus } from "@server/domain/entities/service-order";
 import { relations } from "drizzle-orm";
-import { pgEnum, timestamp, uuid } from "drizzle-orm/pg-core";
+import { timestamp, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
 import { pets } from "./pet";
 import { serviceType } from "./service-type";
 import { veterinarians } from "./veterinarians";
 
-export const statusEnum = pgEnum("status", serviceOrderStatus);
+export const statusEnum = appSchema.enum("status", serviceOrderStatus);
 
 export const serviceOrders = appSchema.table("service_orders", {
   ...baseSchema,
