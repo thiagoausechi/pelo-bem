@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, type PropsWithChildren } from "react";
 import { DEFAULT_TAB, LOCAL_STORAGE_KEY, REGISTERS_TABS } from "./tabs";
 
+const BASE_PATH = "/registers";
+
 export function RegistersPage({ children }: PropsWithChildren) {
   const router = useRouter();
   const params = useParams();
@@ -13,7 +15,7 @@ export function RegistersPage({ children }: PropsWithChildren) {
 
   const handleTabChange = (tabId: string) => {
     localStorage.setItem(LOCAL_STORAGE_KEY, tabId);
-    router.push(`/registers/${tabId}`);
+    router.push(`${BASE_PATH}/${tabId}`);
   };
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export function RegistersRouteRedirector() {
   useEffect(() => {
     const lastTab = localStorage.getItem(LOCAL_STORAGE_KEY);
 
-    router.replace(`/registers/${lastTab ?? DEFAULT_TAB}`);
+    router.replace(`${BASE_PATH}/${lastTab ?? DEFAULT_TAB}`);
   }, [router]);
 
   return (
