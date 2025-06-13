@@ -54,30 +54,18 @@ export function MobileNav({ links, currentPath }: Props) {
       >
         <nav className="flex flex-col gap-4">
           <ul className="flex flex-col items-center gap-3">
-            {/* <ul className="container mx-auto flex flex-col gap-4 px-4 py-4 md:hidden"> */}
             {links.map((link) => (
               <li key={link.href}>
                 <MobileLink
                   link={link}
-                  active={currentPath === link.href}
+                  active={currentPath.includes(link.href)}
                   onOpenChange={setOpen}
                 />
               </li>
             ))}
           </ul>
-          {/* </ul> */}
         </nav>
       </PopoverContent>
     </Popover>
   );
 }
-
-/*
-<ul className="container mx-auto flex flex-col gap-4 px-4 py-4 md:hidden">
-      {links.map((link) => (
-        <li key={link.href}>
-          <NavLink link={link} active={link.href === currentPath} />
-        </li>
-      ))}
-    </ul>
-*/
