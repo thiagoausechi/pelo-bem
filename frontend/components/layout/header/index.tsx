@@ -9,16 +9,12 @@ import type { Link } from "./nav-link";
 
 const navbarLinks: Link[] = [
   {
+    label: "Cadastros",
+    href: "/registers",
+  },
+  {
     label: "Dashboard",
     href: "/dashboard",
-  },
-  {
-    label: "Cadastrar Cuidador",
-    href: "/cadastrar-cuidador",
-  },
-  {
-    label: "Cadastrar Veterinário",
-    href: "/cadastrar-veterinario",
   },
 ] as const;
 
