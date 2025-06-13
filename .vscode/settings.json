@@ -2,7 +2,7 @@
   "conventionalCommits.scopes": [
     "global",
     "client",
-    "client/page",
+    "client/pages",
     "client/components",
     "client/hooks",
     "client/utils",
