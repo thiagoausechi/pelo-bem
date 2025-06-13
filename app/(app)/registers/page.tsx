@@ -1,5 +1,5 @@
-import { RegistersPage } from "@client/pages/registers";
+import { RegistersRouteRedirector } from "@client/pages/registers";
 
-export default function Registers() {
-  return <RegistersPage />;
+export default function RegistersDefaultRoute() {
+  return <RegistersRouteRedirector />;
 }
