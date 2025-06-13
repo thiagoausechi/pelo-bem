@@ -7,6 +7,7 @@
     "client/hooks",
     "client/utils",
     "client/assets",
+    "client/styles",
     "server",
     "server/domain",
     "server/app",
