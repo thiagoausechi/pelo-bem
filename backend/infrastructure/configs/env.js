@@ -14,7 +14,7 @@ export const env = createEnv({
     /**===================================================================================================
      *  Banco de Dados (Drizzle ORM)
      * =================================================================================================== */
-    DATABASE_PROTOCOL: z.enum(["http", "https", "postgres", "mysql"]),
+    DATABASE_PROTOCOL: z.enum(["http", "https", "postgresql"]),
     DATABASE_USER: z.string(),
     DATABASE_PASSWORD: z.string(),
     DATABASE_HOST: z.string(),
