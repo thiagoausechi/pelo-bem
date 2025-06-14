@@ -1,30 +1,53 @@
 import { NextResponse } from "next/server";
 
-const error = (code: string, status: number) =>
-  NextResponse.json({ code }, { status });
+export type HttpError = { message: string; cause?: string };
 
-const errorWithMessage = (code: string, status: number) => (message: string) =>
-  NextResponse.json({ message, code }, { status });
+export type HttpResponse<T> = { code: string } & (
+  | { data: T }
+  | { error: HttpError; code: string }
+);
+
+const success =
+  (code: string, status: number) =>
+  <T>(data: T) =>
+    NextResponse.json<HttpResponse<T>>({ data, code }, { status });
+
+const error = (code: string, status: number) => (error: Error | string) => () =>
+  NextResponse.json<HttpResponse<never>>(
+    {
+      error: {
+        message: typeof error === "string" ? error : error.message,
+        cause:
+          error instanceof Error
+            ? error.cause instanceof Error
+              ? error.cause.message
+              : undefined
+            : undefined,
+      },
+      code,
+    },
+    { status },
+  );
 
 const SUCCESS_CODES = {
-  OK: { status: 200 },
-  CREATED: { status: 201 },
-  ACCEPTED: { status: 202 },
-  NO_CONTENT: { status: 204 },
+  OK: success("OK", 200),
+  CREATED: success("CREATED", 201),
+  ACCEPTED: success("ACCEPTED", 202),
+  NO_CONTENT: success("NO_CONTENT", 204),
 };
 
 const CLIENT_CODES = {
-  BAD_REQUEST: errorWithMessage("Requisição inválida", 400),
-  UNAUTHORIZED: error("Requisição não autorizada", 401),
-  FORBIDDEN: error("Acesso negado", 403),
-  NOT_FOUND: errorWithMessage("Recurso não encontrado", 404),
-  CONFLICT: errorWithMessage("Conflito de recursos", 409),
+  BAD_REQUEST: error("BAD_REQUEST", 400),
+  UNAUTHORIZED: error("UNAUTHORIZED", 401)("Requisição não autorizada"), // prettier-ignore
+  FORBIDDEN: error("FORBIDDEN", 403)("Acesso negado"),
+  NOT_FOUND: error("NOT_FOUND", 404),
+  CONFLICT: error("CONFLICT", 409),
 };
 
 const SERVER_CODES = {
-  INTERNAL_SERVER_ERROR: errorWithMessage("Erro interno do servidor", 500),
-  UNHANDLED_ERROR: errorWithMessage("Erro não tratado", 500),
-  NOT_IMPLEMENTED: error("Funcionalidade não implementada", 501),
+  INTERNAL_SERVER_ERROR: error("INTERNAL_SERVER_ERROR", 500),
+  UNHANDLED_ERROR: error("UNHANDLED_ERROR", 500),
+  NOT_IMPLEMENTED: error("NOT_IMPLEMENTED", 501)("Funcionalidade não implementada"), // prettier-ignore
 };
 
 export const HttpStatus = {
