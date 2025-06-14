@@ -25,4 +25,12 @@ export class NextJsServiceOrdersController {
   async handlePutServiceType(_: NextRequest): Promise<NextResponse> {
     return HttpStatus.NOT_IMPLEMENTED;
   }
+
+  async handleGetSatisfaction(_: NextRequest): Promise<NextResponse> {
+    return HttpStatus.NOT_IMPLEMENTED;
+  }
+
+  async handlePostSatisfaction(_: NextRequest): Promise<NextResponse> {
+    return HttpStatus.NOT_IMPLEMENTED;
+  }
 }
