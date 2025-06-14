@@ -33,7 +33,7 @@ export function RegistersPage({ children }: PropsWithChildren) {
             onValueChange={handleTabChange}
             className="flex flex-1 flex-col"
           >
-            <div className="relative flex flex-1 flex-col gap-4 overflow-auto">
+            <div className="relative flex flex-1 flex-col gap-4">
               {children}
             </div>
           </Tabs>
