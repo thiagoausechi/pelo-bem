@@ -23,6 +23,7 @@ const CLIENT_CODES = {
 
 const SERVER_CODES = {
   INTERNAL_SERVER_ERROR: errorWithMessage("Erro interno do servidor", 500),
+  UNHANDLED_ERROR: errorWithMessage("Erro não tratado", 500),
   NOT_IMPLEMENTED: error("Funcionalidade não implementada", 501),
 };
 
