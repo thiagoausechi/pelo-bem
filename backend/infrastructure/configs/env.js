@@ -14,7 +14,7 @@ export const env = createEnv({
     /**===================================================================================================
      *  Banco de Dados (Drizzle ORM)
      * =================================================================================================== */
-    DATABASE_PROTOCOL: z.string(),
+    DATABASE_PROTOCOL: z.enum(["http", "https", "postgres", "mysql"]),
     DATABASE_USER: z.string(),
     DATABASE_PASSWORD: z.string(),
     DATABASE_HOST: z.string(),
@@ -31,15 +31,18 @@ export const env = createEnv({
       }),
 
     /**===================================================================================================
-     *  Armazenamento de Arquivos (S3 File Storage)
+     *  Armazenamento de Arquivos (S3 File Storage) + NextConfig (Images)
      * =================================================================================================== */
     S3_BUCKET_NAME: z.string(),
     S3_REGION: z.string(),
     S3_ACCESS_KEY_ID: z.string(),
     S3_SECRET_ACCESS_KEY: z.string(),
-    S3_PUBLIC_URL: z.string().url(),
     S3_FORCE_PATH_STYLE: z.coerce.boolean().default(false),
+    S3_PROTOCOL: z.enum(["http", "https"]),
+    S3_HOST: z.string(),
+    S3_PORT: z.string().optional(), // Necessário para o MinIO, mas não com AWS S3
 
+    S3_PUBLIC_URL: z.string().url(),
     S3_ENDPOINT: z.string().url().optional(), // Necessário para o MinIO, mas não com AWS S3
 
     /**===================================================================================================
@@ -104,13 +107,28 @@ function processDatabaseVariables() {
 }
 
 function processFileStorageVariables() {
-  return {
+  const vars = {
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
     S3_REGION: process.env.S3_REGION,
     S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
     S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
     S3_PUBLIC_URL: process.env.S3_PUBLIC_URL,
     S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE,
-    S3_ENDPOINT: process.env.S3_ENDPOINT,
+    S3_PROTOCOL: process.env.S3_PROTOCOL,
+    S3_HOST: process.env.S3_HOST,
+    S3_PORT: process.env.S3_PORT ?? "",
+  };
+
+  const S3_ENDPOINT =
+    process.env.S3_ENDPOINT ??
+    `${vars.S3_PROTOCOL}://${vars.S3_HOST}${vars.S3_PORT ? `:${vars.S3_PORT}` : ""}`;
+
+  const S3_PUBLIC_URL =
+    process.env.S3_PUBLIC_URL ?? `${S3_ENDPOINT}/${vars.S3_BUCKET_NAME}`;
+
+  return {
+    ...vars,
+    S3_ENDPOINT,
+    S3_PUBLIC_URL,
   };
 }
