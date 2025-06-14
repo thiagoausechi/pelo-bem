@@ -92,6 +92,8 @@ interface DataTableProps<TData, TValue>
   extends DataTableUserInteractions<TData> {
   data: TData[];
   columns: Column<TData, TValue>[];
+  loadingMessage?: false | string;
+  errorMessage?: false | string;
 }
 
 function DataTable<TData, TValue>({
@@ -100,6 +102,8 @@ function DataTable<TData, TValue>({
   actions,
   search,
   filters,
+  loadingMessage,
+  errorMessage,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -174,6 +178,8 @@ function DataTable<TData, TValue>({
   );
 
   const renderBody = () => {
+    if (loadingMessage) return renderNoData(loadingMessage);
+    if (errorMessage) return renderNoData(errorMessage);
     if (!table.getRowModel().rows?.length)
       return renderNoData("Nenhum resultado encontrado.");
 
