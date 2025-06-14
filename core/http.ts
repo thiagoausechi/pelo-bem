@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 
-const error = (message: string, status: number) =>
-  NextResponse.json({ message }, { status });
+const error = (code: string, status: number) =>
+  NextResponse.json({ code }, { status });
+
+const errorWithMessage = (code: string, status: number) => (message: string) =>
+  NextResponse.json({ message, code }, { status });
 
 const SUCCESS_CODES = {
   OK: { status: 200 },
@@ -11,14 +14,14 @@ const SUCCESS_CODES = {
 };
 
 const CLIENT_CODES = {
-  BAD_REQUEST: error("Requisição inválida", 400),
+  BAD_REQUEST: errorWithMessage("Requisição inválida", 400),
   UNAUTHORIZED: error("Requisição não autorizada", 401),
   FORBIDDEN: error("Acesso negado", 403),
-  NOT_FOUND: error("Recurso não encontrado", 404),
+  NOT_FOUND: errorWithMessage("Recurso não encontrado", 404),
 };
 
 const SERVER_CODES = {
-  INTERNAL_SERVER_ERROR: error("Erro interno do servidor", 500),
+  INTERNAL_SERVER_ERROR: errorWithMessage("Erro interno do servidor", 500),
   NOT_IMPLEMENTED: error("Funcionalidade não implementada", 501),
 };
 
