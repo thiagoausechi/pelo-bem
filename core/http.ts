@@ -18,6 +18,7 @@ const CLIENT_CODES = {
   UNAUTHORIZED: error("Requisição não autorizada", 401),
   FORBIDDEN: error("Acesso negado", 403),
   NOT_FOUND: errorWithMessage("Recurso não encontrado", 404),
+  CONFLICT: errorWithMessage("Conflito de recursos", 409),
 };
 
 const SERVER_CODES = {
