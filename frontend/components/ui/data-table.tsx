@@ -147,6 +147,47 @@ function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const renderHeaders = () =>
+    table.getHeaderGroups().map((headerGroup) => (
+      <TableRow key={headerGroup.id}>
+        {headerGroup.headers.map((header) => {
+          return (
+            <TableHead key={header.id} colSpan={header.colSpan}>
+              {header.isPlaceholder
+                ? null
+                : flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+            </TableHead>
+          );
+        })}
+      </TableRow>
+    ));
+
+  const renderNoData = (node: React.ReactNode) => (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-24 text-center">
+        {node}
+      </TableCell>
+    </TableRow>
+  );
+
+  const renderBody = () => {
+    if (!table.getRowModel().rows?.length)
+      return renderNoData("Nenhum resultado encontrado.");
+
+    return table.getRowModel().rows.map((row) => (
+      <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+        {row.getVisibleCells().map((cell) => (
+          <TableCell key={cell.id}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <DataTableToolbar
@@ -160,50 +201,10 @@ function DataTable<TData, TValue>({
         <CardContent className="p-0">
           <Table>
             <TableHeader className="bg-muted sticky top-0 z-10 **:data-[slot=table-head]:first:pl-2 **:data-[slot=table-head]:last:pr-2">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
+              {renderHeaders()}
             </TableHeader>
             <TableBody className="**:data-[slot=table-cell]:first:pl-2 **:data-[slot=table-cell]:last:pr-2">
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    Nenhum resultado encontrado.
-                  </TableCell>
-                </TableRow>
-              )}
+              {renderBody()}
             </TableBody>
           </Table>
         </CardContent>
