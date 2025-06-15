@@ -4,6 +4,7 @@ import type { FileStorageGateway } from "@server/application/gateways/file-stora
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
 import { type NextRequest, type NextResponse } from "next/server";
+import { NextJsController } from "./base";
 
 interface Dependencies {
   ownerGateway: OwnerGateway;
@@ -12,8 +13,10 @@ interface Dependencies {
   fileStorage: FileStorageGateway;
 }
 
-export class NextJsOwnersController {
-  constructor(private readonly deps: Dependencies) {}
+export class NextJsOwnersController extends NextJsController {
+  constructor(private readonly deps: Dependencies) {
+    super();
+  }
 
   async handleGet(_: NextRequest): Promise<NextResponse> {
     return HttpStatus.NOT_IMPLEMENTED();
