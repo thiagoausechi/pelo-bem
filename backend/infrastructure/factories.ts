@@ -34,6 +34,6 @@ export const Gateways = {
 export const Controllers = {
   ownersController: getOrCreate(
     "ownersController",
-    () => new NextJsOwnersController(),
+    () => new NextJsOwnersController({ ...Validators, ...Gateways }),
   ),
 };
