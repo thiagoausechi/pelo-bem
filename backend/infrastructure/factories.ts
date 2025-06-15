@@ -1,3 +1,4 @@
+import { NextJsOwnersController } from "./adapters/http/next/controllers";
 import { env } from "./configs/env";
 import { PgOwnerGateway } from "./persistence/drizzle/gateways";
 import { s3 } from "./persistence/s3";
@@ -27,5 +28,12 @@ export const Gateways = {
   fileStorage: getOrCreate(
     "fileStorage",
     () => new S3FileStorageGateway(s3, env.S3_BUCKET_NAME),
+  ),
+};
+
+export const Controllers = {
+  ownersController: getOrCreate(
+    "ownersController",
+    () => new NextJsOwnersController(),
   ),
 };
