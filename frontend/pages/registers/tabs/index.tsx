@@ -1,6 +1,7 @@
 import { Label } from "@client/components/ui/label";
 import type { TabsConfig } from "@client/components/ui/tabs";
 import { HeartHandshake, PawPrint, Stethoscope } from "lucide-react";
+import { OwnersRegisterTab } from "./owners";
 
 export const REGISTERS_TABS = {
   owners: {
@@ -9,7 +10,7 @@ export const REGISTERS_TABS = {
         <HeartHandshake className="text-muted-foreground h-4 w-4" /> Cuidadores
       </Label>
     ),
-    content: <div>[WIP] Conteúdo dos Cuidadores</div>,
+    content: <OwnersRegisterTab />,
   },
   pets: {
     label: (
