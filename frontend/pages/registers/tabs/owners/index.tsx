@@ -4,12 +4,13 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { queryKey } from "./management-table/config";
 
 export async function OwnersRegisterTab() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["list-owners"],
+    queryKey: [queryKey],
     queryFn: async () => [] as OwnerDTO[],
   });
 
