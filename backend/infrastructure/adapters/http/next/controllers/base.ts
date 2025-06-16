@@ -48,9 +48,9 @@ export class NextJsController {
 
         if (error instanceof NotFoundError)
           return HttpStatus.NOT_FOUND(error)();
-      }
-      if (error instanceof UnexpectedError)
-        return HttpStatus.INTERNAL_SERVER_ERROR(error)();
+
+        if (error instanceof UnexpectedError)
+          return HttpStatus.INTERNAL_SERVER_ERROR(error)();
 
       return HttpStatus.UNHANDLED_ERROR(error)();
     }
