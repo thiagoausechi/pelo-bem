@@ -20,6 +20,13 @@ export class NextJsController {
     return parsedData;
   }
 
+  protected parsePath(request: NextRequest): string[] {
+    return request.nextUrl.pathname // -> api/owners/[id]
+      .split("/") // -> ["api", "owners", "[id]"]
+      .filter((segment) => segment !== "api" && segment !== "") // -> ["owners", "[id]"]
+      .slice(1); // -> ["[id]"] ou mais segmentos caso haja
+  }
+
   protected async handleRequest(handler: () => Promise<NextResponse>) {
     try {
       const response = await handler();
