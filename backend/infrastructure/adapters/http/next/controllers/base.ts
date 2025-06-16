@@ -9,10 +9,10 @@ import type { NextRequest, NextResponse } from "next/server";
 import type { z, ZodObject, ZodRawShape } from "zod";
 
 export class NextJsController {
-  protected async parseRequest<T extends ZodRawShape>(
-    parser: ZodObject<T>,
+  protected async parseRequest<TSchema extends ZodRawShape>(
+    parser: ZodObject<TSchema>,
     request: NextRequest,
-  ): Promise<z.infer<ZodObject<T>>> {
+  ): Promise<z.infer<ZodObject<TSchema>>> {
     const formData = await request.formData();
     const parsedData = await parser.parseAsync(
       Object.fromEntries(formData.entries()),
