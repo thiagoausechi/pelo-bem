@@ -16,7 +16,12 @@ export class Bucket {
 
   async initialize() {
     try {
-      if (!(await this.exists())) await this.create();
+      if (!(await this.exists())) {
+        if (await this.create()) return await this.makePublic();
+
+        // Se a criação falhar, não faz nada, pois o bucket já existe ou não pode ser criado
+        return;
+      }
 
       await this.makePublic();
     } catch (error) {
@@ -32,6 +37,13 @@ export class Bucket {
       return true;
     } catch (error) {
       if (error instanceof Error && error.name === "NotFound") return false;
+      if (
+        this.handleConnectionError(
+          error,
+          "Não foi possível determinar se o bucket existe.",
+        )
+      )
+        return false;
       throw new UnexpectedError("Erro ao verificar bucket", error as Error);
     }
   }
@@ -41,7 +53,10 @@ export class Bucket {
       await this.s3Client.send(
         new CreateBucketCommand({ Bucket: this.bucketName }),
       );
+      return true;
     } catch (error) {
+      if (this.handleConnectionError(error, "Não foi possível criar o bucket."))
+        return false;
       throw new UnexpectedError("Erro ao criar bucket", error as Error);
     }
   }
@@ -151,6 +166,16 @@ export class Bucket {
     if ("Code" in error) return includesCode((error as { Code: string }).Code);
     if ("code" in error) return includesCode((error as { code: string }).code);
     return false;
+  }
+
+  private handleConnectionError(error: unknown, message: string) {
+    if (!this.isCode(error, "ECONNREFUSED")) return false;
+
+    console.warn(
+      `AVISO: ${message} A conexão foi recusada. Isso pode indicar que o serviço S3 não está em execução.`,
+    );
+
+    return true;
   }
 
   get name() {
