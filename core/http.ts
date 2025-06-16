@@ -5,63 +5,54 @@ export type HttpResponse<T> = { code: string } & (
   | { error: Error; code: string }
 );
 
-const success =
-  (code: string, status: number) =>
-  <T>(data: T) =>
-    NextResponse.json<HttpResponse<T>>({ data, code }, { status });
+type Exception = Error | string;
 
-const error = (code: string, status: number) => (error: Error | string) => () =>
-  NextResponse.json<HttpResponse<never>>(
+function successResponse<T>(data: T, code: string, status: number) {
+  return NextResponse.json<HttpResponse<T>>({ data, code }, { status });
+}
+
+function errorResponse(error: Exception, code: string, status: number) {
+  return NextResponse.json<HttpResponse<never>>(
     {
-      error: new Error(typeof error === "string" ? error : error.message, {
+      error: {
+        // Omite propositalmente o nome específico do erro para evitar exposição de detalhes internos
+        name: "Erro",
+        message: error instanceof Error ? error.message : String(error),
         cause:
-          error instanceof Error
-            ? error.cause instanceof Error
-              ? error.cause.message
-              : undefined
+          error instanceof Error && error.cause instanceof Error
+            ? error.cause.message
             : undefined,
-      }),
+      },
       code,
     },
     { status },
   );
+}
 
 const SUCCESS_CODES = {
-  OK: success("OK", 200),
-  CREATED: success("CREATED", 201),
-  ACCEPTED: success("ACCEPTED", 202),
-  NO_CONTENT: success("NO_CONTENT", 204),
+  OK: <T>(data: T) => successResponse(data, "OK", 200),
+  CREATED: <T>(data: T) => successResponse(data, "CREATED", 201),
+  ACCEPTED: <T>(data: T) => successResponse(data, "ACCEPTED", 202),
+  NO_CONTENT: <T>(data: T) => successResponse(data, "NO_CONTENT", 204),
 };
 
-const CLIENT_CODES = {
-  BAD_REQUEST: error("BAD_REQUEST", 400),
-  UNAUTHORIZED: error("UNAUTHORIZED", 401)("Requisição não autorizada"), // prettier-ignore
-  FORBIDDEN: error("FORBIDDEN", 403)("Acesso negado"),
-  NOT_FOUND: error("NOT_FOUND", 404),
-  CONFLICT: error("CONFLICT", 409),
+const CLIENT_ERROR_CODES = {
+  BAD_REQUEST: (e: Exception) => errorResponse(e, "BAD_REQUEST", 400),
+  UNAUTHORIZED: () => errorResponse("Requisição não autorizada", "UNAUTHORIZED", 401), // prettier-ignore
+  FORBIDDEN: () => errorResponse("Acesso negado", "FORBIDDEN", 403),
+  NOT_FOUND: (e: Exception) => errorResponse(e, "NOT_FOUND", 404),
+  CONFLICT: (e: Exception) => errorResponse(e, "CONFLICT", 409),
 };
 
-const SERVER_CODES = {
-  INTERNAL_SERVER_ERROR: error("INTERNAL_SERVER_ERROR", 500),
-  UNHANDLED_ERROR: error("UNHANDLED_ERROR", 500),
-  NOT_IMPLEMENTED: error("NOT_IMPLEMENTED", 501)("Funcionalidade não implementada"), // prettier-ignore
+const SERVER_ERROR_CODES = {
+  INTERNAL_SERVER_ERROR: (e: Exception) => errorResponse(e, "INTERNAL_SERVER_ERROR", 500), // prettier-ignore
+  SERVICE_UNAVAILABLE: () => errorResponse("Serviço indisponível", "SERVICE_UNAVAILABLE", 503), // prettier-ignore
+  UNHANDLED_ERROR: (e: Exception) => errorResponse(e, "UNHANDLED_ERROR", 500), // prettier-ignore
+  NOT_IMPLEMENTED: () => errorResponse("Funcionalidade não implementada", "NOT_IMPLEMENTED", 501), // prettier-ignore
 };
 
 export const HttpStatus = {
   ...SUCCESS_CODES,
-  ...CLIENT_CODES,
-  ...SERVER_CODES,
+  ...CLIENT_ERROR_CODES,
+  ...SERVER_ERROR_CODES,
 };
-
-export class ApiError extends Error {
-  public readonly statusCode: number;
-  public readonly cause?: Error;
-
-  constructor(message: string, statusCode: number, cause?: Error) {
-    super(message);
-    this.statusCode = statusCode;
-    this.cause = cause;
-
-    this.name = this.constructor.name;
-  }
-}
