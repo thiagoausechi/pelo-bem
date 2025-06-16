@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@client/components/ui/button";
+import { CreateOwnerAction } from "@client/components/layout/actions/owners/create";
 import { DataTable } from "@client/components/ui/data-table";
 import type { OwnerDTO } from "@core/contracts/dtos/owners";
 import { useQuery } from "@tanstack/react-query";
@@ -16,11 +16,7 @@ export function OwnersManagementTable() {
     <DataTable
       data={data ?? ([] as OwnerDTO[])}
       columns={columns}
-      actions={[
-        <Button key="new-owner" variant="default" size="sm">
-          Novo Cuidador
-        </Button>,
-      ]}
+      actions={[<CreateOwnerAction key="new-owner" />]}
       search={{
         columnId: "name",
         placeholder: "Buscar por nome do cuidador",
