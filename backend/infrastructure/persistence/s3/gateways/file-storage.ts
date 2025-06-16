@@ -23,7 +23,7 @@ export class S3FileStorageGateway implements FileStorageGateway {
   }
 
   async upload(args: {
-    file: Buffer;
+    file: File;
     path: FilePath;
     mimeType?: string;
   }): Promise<Result<FilePath, UnexpectedError>> {
@@ -48,7 +48,7 @@ export class S3FileStorageGateway implements FileStorageGateway {
 
   async download(
     path: FilePath,
-  ): Promise<Result<Buffer, NotFoundError | UnexpectedError>> {
+  ): Promise<Result<File, NotFoundError | UnexpectedError>> {
     const command = new GetObjectCommand({
       Bucket: this.bucketName,
       Key: path,
@@ -58,11 +58,15 @@ export class S3FileStorageGateway implements FileStorageGateway {
       const response = await this.s3Client.send(command);
       if (!response.Body) return err(new NotFoundError("Arquivo"));
 
-      // Converte o ReadableStream do S3 para um Buffer
-      const byteArray = await response.Body.transformToByteArray();
-      const buffer = Buffer.from(byteArray);
+      const contentType = response.ContentType ?? "application/octet-stream";
+      const filename = path.split("/").pop() ?? "arquivo";
 
-      return ok(buffer);
+      const byteArray = await response.Body.transformToByteArray();
+      const file = new File([new Uint8Array(byteArray)], filename, {
+        type: contentType,
+      });
+
+      return ok(file);
     } catch (error) {
       console.error("Erro ao fazer download do arquivo para o S3:", error);
       return err(

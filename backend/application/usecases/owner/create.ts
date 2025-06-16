@@ -18,7 +18,7 @@ interface Request {
   fullname: string;
   email: string;
   phone: string;
-  profilePicture?: Buffer;
+  profilePicture?: File;
 }
 
 export class CreateOwnerUseCase {

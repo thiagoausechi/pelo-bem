@@ -22,7 +22,7 @@ interface Request {
   weightKg: number;
   heightCm: number;
   gender: Gender;
-  picture?: Buffer;
+  picture?: File;
 }
 
 export class CreatePetUseCase {
