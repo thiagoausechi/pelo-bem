@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 
-export type HttpError = { message: string; cause?: string };
-
 export type HttpResponse<T> = { code: string } & (
   | { data: T }
-  | { error: HttpError; code: string }
+  | { error: Error; code: string }
 );
 
 const success =
@@ -15,15 +13,14 @@ const success =
 const error = (code: string, status: number) => (error: Error | string) => () =>
   NextResponse.json<HttpResponse<never>>(
     {
-      error: {
-        message: typeof error === "string" ? error : error.message,
+      error: new Error(typeof error === "string" ? error : error.message, {
         cause:
           error instanceof Error
             ? error.cause instanceof Error
               ? error.cause.message
               : undefined
             : undefined,
-      },
+      }),
       code,
     },
     { status },
@@ -55,3 +52,16 @@ export const HttpStatus = {
   ...CLIENT_CODES,
   ...SERVER_CODES,
 };
+
+export class ApiError extends Error {
+  public readonly statusCode: number;
+  public readonly cause?: Error;
+
+  constructor(message: string, statusCode: number, cause?: Error) {
+    super(message);
+    this.statusCode = statusCode;
+    this.cause = cause;
+
+    this.name = this.constructor.name;
+  }
+}
