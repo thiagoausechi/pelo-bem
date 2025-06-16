@@ -5,9 +5,21 @@ import { UnexpectedError } from "@server/application/errors/unexpected";
 import { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
 import { CreationFailedError } from "@server/application/usecases/errors/creation-failed";
 import { DomainError } from "@server/domain/errors";
-import type { NextResponse } from "next/server";
+import type { NextRequest, NextResponse } from "next/server";
+import type { z, ZodObject, ZodRawShape } from "zod";
 
 export class NextJsController {
+  protected async parseRequest<T extends ZodRawShape>(
+    parser: ZodObject<T>,
+    request: NextRequest,
+  ): Promise<z.infer<ZodObject<T>>> {
+    const formData = await request.formData();
+    const parsedData = await parser.parseAsync(
+      Object.fromEntries(formData.entries()),
+    );
+    return parsedData;
+  }
+
   protected async handleRequest(handler: () => Promise<NextResponse>) {
     try {
       const response = await handler();
