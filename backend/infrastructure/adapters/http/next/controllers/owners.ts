@@ -25,6 +25,11 @@ export class NextJsOwnersController extends NextJsController {
   }
 
   async handlePost(request: NextRequest): Promise<NextResponse> {
+    if (this.parsePath(request).length > 0)
+      return HttpStatus.BAD_REQUEST(
+        "Caminho de requisição inválido para o método POST.",
+      );
+
     return this.handleRequest(async () => {
       const parsedFormData = await this.parseRequest(createOwnerForm, request);
 
