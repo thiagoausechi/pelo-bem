@@ -81,9 +81,10 @@ export class Bucket {
         "Code" in error &&
         (error.Code === "MalformedXML" || error.Code === "NotImplemented")
       )
-        console.warn(
-          "AVISO: O comando PutPublicAccessBlock não é suportado por este endpoint S3. Isso é esperado e será ignorado.",
+        return console.warn(
+          "AVISO: O comando PutPublicAccessBlock não é suportado por este endpoint S3. Isso é esperado para o MinIO e pode ser ignorado.",
         );
+
       throw new UnexpectedError(
         "Erro ao desativar bloqueio de acesso público",
         error as Error,
