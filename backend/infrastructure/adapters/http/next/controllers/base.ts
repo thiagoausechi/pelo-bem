@@ -52,6 +52,9 @@ export class NextJsController {
         if (error instanceof UnexpectedError)
           return HttpStatus.INTERNAL_SERVER_ERROR(error)();
 
+        return HttpStatus.BAD_REQUEST(error)();
+      }
+
       return HttpStatus.UNHANDLED_ERROR(error)();
     }
   }
