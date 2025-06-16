@@ -6,6 +6,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@client/components/ui/drawer";
+import { CreateOwnerForm } from "./form";
 
 export function CreateOwnerAction() {
   return (
@@ -17,7 +18,7 @@ export function CreateOwnerAction() {
         <DrawerHeader className="gap-1">
           <DrawerTitle>Adicionar novo Cuidador</DrawerTitle>
         </DrawerHeader>
-        {/* <CreateOwnerForm /> */}
+        <CreateOwnerForm />
       </DrawerContent>
     </Drawer>
   );
