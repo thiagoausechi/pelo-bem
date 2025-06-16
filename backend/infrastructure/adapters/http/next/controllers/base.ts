@@ -43,6 +43,9 @@ export class NextJsController {
       if (error instanceof DomainError) return HttpStatus.BAD_REQUEST(error)();
 
       if (error instanceof ApplicationError) {
+        if (error instanceof CreationFailedError)
+          return HttpStatus.BAD_REQUEST(error)();
+
         if (error instanceof EntryAlreadyExistsError)
           return HttpStatus.CONFLICT(error)();
 
