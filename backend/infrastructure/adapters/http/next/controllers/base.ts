@@ -40,8 +40,7 @@ export class NextJsController {
           "Ocorreu um erro inesperado.",
         )();
 
-      if (error instanceof DomainError)
-        return HttpStatus.BAD_REQUEST(error.message)();
+      if (error instanceof DomainError) return HttpStatus.BAD_REQUEST(error)();
 
       if (error instanceof ApplicationError) {
         if (error instanceof EntryAlreadyExistsError)
