@@ -3,6 +3,7 @@ import { ApplicationError } from "@server/application/errors";
 import { NotFoundError } from "@server/application/errors/not-found";
 import { UnexpectedError } from "@server/application/errors/unexpected";
 import { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
+import { CreationFailedError } from "@server/application/usecases/errors/creation-failed";
 import { DomainError } from "@server/domain/errors";
 import type { NextResponse } from "next/server";
 
@@ -36,29 +37,26 @@ export class NextJsController {
       console.error("[API] " + this.formatError(error));
 
       if (!(error instanceof Error))
-        return HttpStatus.INTERNAL_SERVER_ERROR(
-          "Ocorreu um erro inesperado.",
-        )();
+        return HttpStatus.INTERNAL_SERVER_ERROR("Ocorreu um erro inesperado.");
 
-      if (error instanceof DomainError) return HttpStatus.BAD_REQUEST(error)();
+      if (error instanceof DomainError) return HttpStatus.BAD_REQUEST(error);
 
       if (error instanceof ApplicationError) {
         if (error instanceof CreationFailedError)
-          return HttpStatus.BAD_REQUEST(error)();
+          return HttpStatus.BAD_REQUEST(error);
 
         if (error instanceof EntryAlreadyExistsError)
-          return HttpStatus.CONFLICT(error)();
+          return HttpStatus.CONFLICT(error);
 
-        if (error instanceof NotFoundError)
-          return HttpStatus.NOT_FOUND(error)();
+        if (error instanceof NotFoundError) return HttpStatus.NOT_FOUND(error);
 
         if (error instanceof UnexpectedError)
-          return HttpStatus.INTERNAL_SERVER_ERROR(error)();
+          return HttpStatus.INTERNAL_SERVER_ERROR(error);
 
-        return HttpStatus.BAD_REQUEST(error)();
+        return HttpStatus.BAD_REQUEST(error);
       }
 
-      return HttpStatus.UNHANDLED_ERROR(error)();
+      return HttpStatus.UNHANDLED_ERROR(error);
     }
   }
 }
