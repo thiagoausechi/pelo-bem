@@ -30,7 +30,7 @@ export class S3FileStorageGateway implements FileStorageGateway {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Key: args.path,
-      Body: args.file,
+      Body: Buffer.from(await args.file.arrayBuffer()),
       ContentType: args.mimeType,
       ACL: "public-read",
     });
