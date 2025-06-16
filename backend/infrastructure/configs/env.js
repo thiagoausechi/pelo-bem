@@ -34,6 +34,7 @@ export const env = createEnv({
      *  Armazenamento de Arquivos (S3 File Storage) + NextConfig (Images)
      * =================================================================================================== */
     S3_BUCKET_NAME: z.string(),
+    S3_MAX_FILE_SIZE_MB: z.coerce.number().min(1),
     S3_REGION: z.string(),
     S3_ACCESS_KEY_ID: z.string(),
     S3_SECRET_ACCESS_KEY: z.string(),
@@ -59,7 +60,9 @@ export const env = createEnv({
    *
    * Para expô-las ao cliente, prefixe com `NEXT_PUBLIC_`.
    */
-  client: {},
+  client: {
+    NEXT_PUBLIC_MAX_FILE_SIZE_MB: z.coerce.number().min(1),
+  },
 
   /**
    * Não é possível desestruturar `process.env` como um objeto comum nos "edge runtimes" do Next.js (ex:
@@ -109,6 +112,8 @@ function processDatabaseVariables() {
 function processFileStorageVariables() {
   const vars = {
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+    S3_MAX_FILE_SIZE_MB: process.env.S3_MAX_FILE_SIZE_MB,
+    NEXT_PUBLIC_MAX_FILE_SIZE_MB: process.env.NEXT_PUBLIC_S3_MAX_FILE_SIZE_MB,
     S3_REGION: process.env.S3_REGION,
     S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
     S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
