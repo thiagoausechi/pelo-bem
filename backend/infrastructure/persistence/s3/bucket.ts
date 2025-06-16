@@ -75,12 +75,7 @@ export class Bucket {
         }),
       );
     } catch (error) {
-      if (
-        error !== null &&
-        typeof error === "object" &&
-        "Code" in error &&
-        (error.Code === "MalformedXML" || error.Code === "NotImplemented")
-      )
+      if (this.isCode(error, ["MalformedXML", "NotImplemented"]))
         return console.warn(
           "AVISO: O comando PutPublicAccessBlock não é suportado por este endpoint S3. Isso é esperado para o MinIO e pode ser ignorado.",
         );
@@ -145,6 +140,17 @@ export class Bucket {
         error as Error,
       );
     }
+  }
+
+  private isCode(error: unknown, code: string | string[]) {
+    if (error === null || typeof error !== "object") return false;
+
+    const includesCode = (codeInError: string) =>
+      Array.isArray(code) ? code.includes(codeInError) : codeInError === code;
+
+    if ("Code" in error) return includesCode((error as { Code: string }).Code);
+    if ("code" in error) return includesCode((error as { code: string }).code);
+    return false;
   }
 
   get name() {
