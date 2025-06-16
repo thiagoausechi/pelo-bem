@@ -23,7 +23,7 @@ export class NextJsController {
         `${error.name}: ${error.message}`,
         this.formatCause(error.cause),
         "",
-      ].join("");
+      ].join("\n");
 
     if (typeof error === "string") return error;
   }
