@@ -84,7 +84,7 @@ export class CreateOwnerUseCase {
 
     await this.deps.fileStorage.upload({
       file: this._request.profilePicture,
-      path: `owners/${ownerId}/profile-picture`,
+      path: `owners/${ownerId}.png`,
     });
   }
 }

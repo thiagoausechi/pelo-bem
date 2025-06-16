@@ -67,7 +67,7 @@ export class CreatePetUseCase {
 
     await this.deps.fileStorage.upload({
       file: this._request.picture,
-      path: `pets/${petId}/picture`,
+      path: `pets/${petId}.png`,
     });
   }
 }
