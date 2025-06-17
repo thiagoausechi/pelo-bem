@@ -1,31 +1,28 @@
 import { useAvatarPreview } from "@client/hooks/avatar-preview";
 import { useForm } from "@client/hooks/form";
+import { makeMutation } from "@client/services/query";
+import type { OwnerDTO } from "@core/contracts/dtos/owners";
 import {
   createOwnerForm,
   type CreateOwnerFormData,
 } from "@core/contracts/forms/owners";
-import type { HttpResponse } from "@core/http";
 import { useQueryClient } from "@tanstack/react-query";
 
-const sendCreateOwnerRequest = async (values: CreateOwnerFormData) => {
-  const formData = new FormData();
-  formData.append("fullname", values.fullname);
-  formData.append("email", values.email);
-  formData.append("phone", values.phone);
-  if (values.profilePicture)
-    formData.append("profilePicture", values.profilePicture);
+const sendCreateOwnerRequest = makeMutation<CreateOwnerFormData, OwnerDTO>(
+  "/owners",
+  {
+    valuesToFormData: (values) => {
+      const formData = new FormData();
+      formData.append("fullname", values.fullname);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone);
+      if (values.profilePicture)
+        formData.append("profilePicture", values.profilePicture);
 
-  const response = await fetch("/api/owners", {
-    method: "POST",
-    body: formData,
-  });
-
-  const body = (await response.json()) as HttpResponse<unknown>;
-
-  if ("error" in body) throw body.error;
-
-  return body.data;
-};
+      return formData;
+    },
+  },
+);
 
 export function useCreateOwnerLogic() {
   const queryClient = useQueryClient();
