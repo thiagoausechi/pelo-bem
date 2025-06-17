@@ -34,7 +34,7 @@ export class PgOwnerGateway implements OwnerGateway {
 
   async create(
     entity: Owner,
-  ): Promise<Result<Entry<Owner>, EntryAlreadyExistsError>> {
+  ): Promise<Result<Entry<Owner>, EntryAlreadyExistsError | UnexpectedError>> {
     try {
       if (entity.id)
         if (await this.existsBy({ id: entity.id }))
@@ -57,7 +57,7 @@ export class PgOwnerGateway implements OwnerGateway {
 
   async update(
     entity: Partial<Owner> & { id: string },
-  ): Promise<Result<Entry<Owner>, NotFoundError>> {
+  ): Promise<Result<Entry<Owner>, NotFoundError | UnexpectedError>> {
     try {
       const row = await db
         .update(owners)
