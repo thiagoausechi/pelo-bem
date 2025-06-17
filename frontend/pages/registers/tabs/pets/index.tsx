@@ -7,6 +7,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { PetsManagementTable } from "./management-table";
 
 export async function PetsRegisterTab() {
   const queryClient = new QueryClient();
@@ -19,7 +20,7 @@ export async function PetsRegisterTab() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex flex-col gap-4">
-        {/* <OwnersManagementTable /> */}
+        <PetsManagementTable />
       </div>
     </HydrationBoundary>
   );
