@@ -12,6 +12,14 @@ export const env = createEnv({
    */
   server: {
     /**===================================================================================================
+     *  Aplicação (Next.js)
+     * =================================================================================================== */
+    APP_PROTOCOL: z.enum(["http", "https"]),
+    APP_HOST: z.string(),
+    APP_PORT: z.string().optional(), // Modo de desenvolvimento, mas não necessário em produção
+    APP_URL: z.string().url(),
+
+    /**===================================================================================================
      *  Banco de Dados (Drizzle ORM)
      * =================================================================================================== */
     DATABASE_PROTOCOL: z.enum(["http", "https", "postgresql"]),
@@ -69,6 +77,7 @@ export const env = createEnv({
    * middlewares) ou no lado do cliente, então precisamos desestruturar manualmente.
    */
   runtimeEnv: {
+    ...processAppVariables(),
     ...processDatabaseVariables(),
     ...processFileStorageVariables(),
     NODE_ENV: process.env.NODE_ENV,
@@ -86,6 +95,24 @@ export const env = createEnv({
    */
   emptyStringAsUndefined: true,
 });
+
+function processAppVariables() {
+  const vars = {
+    APP_PROTOCOL: process.env.APP_PROTOCOL,
+    APP_HOST: process.env.APP_HOST,
+    APP_PORT: process.env.APP_PORT ?? "",
+    APP_URL: process.env.APP_URL,
+  };
+
+  const APP_URL =
+    process.env.APP_URL ??
+    `${vars.APP_PROTOCOL}://${vars.APP_HOST}${vars.APP_PORT ? `:${vars.APP_PORT}` : ""}`;
+
+  return {
+    ...vars,
+    APP_URL,
+  };
+}
 
 function processDatabaseVariables() {
   const vars = {
