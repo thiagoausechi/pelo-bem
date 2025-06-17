@@ -9,13 +9,17 @@ import { genders, species } from "@server/domain/entities/pet";
 
 import { useAvatarPreview } from "@client/hooks/avatar-preview";
 import { useForm } from "@client/hooks/form";
+import {
+  fetchOwnersDropdownList,
+  ownersDropdownListQueryKey,
+} from "@client/services/owners";
 import { makeMutation } from "@client/services/query";
 import type { PetDTO } from "@core/contracts/dtos/pets";
 import {
   createPetForm,
   type CreatePetFormData,
 } from "@core/contracts/forms/pet";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const sendCreatePetRequest = makeMutation<CreatePetFormData, PetDTO>("/pets", {
   valuesToFormData: (values) => {
@@ -57,10 +61,27 @@ export function useCreatePetLogic() {
     },
   });
 
+  const {
+    data: ownersList,
+    isLoading: isLoadingOwners,
+    isFetching: isFetchingOwners,
+    isError: isErrorOwners,
+  } = useQuery({
+    queryKey: ownersDropdownListQueryKey,
+    queryFn: fetchOwnersDropdownList,
+  });
+
   const ownerSelected = !!formContext.form.watch("ownerId");
 
   const pictureFile = formContext.form.watch("picture");
   const { previewUrl } = useAvatarPreview(pictureFile);
 
-  return { ...formContext, ownerSelected, previewUrl };
+  return {
+    ...formContext,
+    ownersList: ownersList ?? [],
+    isLoadingOwners: isLoadingOwners || isFetchingOwners,
+    isErrorOwners,
+    ownerSelected,
+    previewUrl,
+  };
 }
