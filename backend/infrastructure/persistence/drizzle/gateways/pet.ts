@@ -8,6 +8,10 @@ import type {
   ListOptions,
 } from "@server/application/gateways/base/gateway";
 import type { Pet } from "@server/domain/entities/pet";
+import { db } from "..";
+import { owners } from "../models/owner";
+import { pets } from "../models/pet";
+import { parseFilters } from "./parse-filters";
 
 export class PgPetGateway implements PetGateway {
   async create(
@@ -40,6 +44,12 @@ export class PgPetGateway implements PetGateway {
   }
 
   async existsBy(filters: FiltersFor<Pet>): Promise<boolean> {
-    throw new Error("Method not implemented.");
+    const result = await db
+      .select({ id: owners.id })
+      .from(pets)
+      .where(parseFilters({ filters, table: pets }))
+      .limit(1);
+
+    return result.length > 0;
   }
 }
