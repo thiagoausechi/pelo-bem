@@ -14,7 +14,7 @@ import { db } from "..";
 import { PgPetMapper } from "../mappers/pet";
 import { owners } from "../models/owner";
 import { pets } from "../models/pet";
-import { parseFilters } from "./parse-filters";
+import { parseFilters, parseListOptions } from "./parse-filters";
 
 export class PgPetGateway implements PetGateway {
   private mapper: PgPetMapper;
@@ -39,7 +39,20 @@ export class PgPetGateway implements PetGateway {
     filters?: FiltersFor<Pet>,
     options?: ListOptions<keyof Pet>,
   ): Promise<Entry<Pet>[]> {
-    throw new Error("Method not implemented.");
+    try {
+      const result = await db.query.pets.findMany(
+        parseListOptions({ filters, options, table: pets }),
+      );
+
+      const entries = await Promise.all(
+        result.map((row) => this.mapper.toEntity(row) as Promise<Entry<Pet>>),
+      );
+
+      return entries;
+    } catch (error) {
+      console.error("Erro ao listar os pets:", error);
+      return [];
+    }
   }
 
   async findBy(
