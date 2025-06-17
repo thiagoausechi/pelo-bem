@@ -10,11 +10,18 @@ import type {
 import type { Pet } from "@server/domain/entities/pet";
 import { count } from "drizzle-orm";
 import { db } from "..";
+import { PgPetMapper } from "../mappers/pet";
 import { owners } from "../models/owner";
 import { pets } from "../models/pet";
 import { parseFilters } from "./parse-filters";
 
 export class PgPetGateway implements PetGateway {
+  private mapper: PgPetMapper;
+
+  constructor() {
+    this.mapper = new PgPetMapper();
+  }
+
   async create(
     entity: Pet,
   ): Promise<Result<Entry<Pet>, EntryAlreadyExistsError>> {
