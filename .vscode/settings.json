@@ -8,6 +8,7 @@
     "client/utils",
     "client/assets",
     "client/styles",
+    "client/services",
     "server",
     "server/domain",
     "server/app",
