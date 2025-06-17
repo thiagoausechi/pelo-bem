@@ -12,8 +12,6 @@ import {
 } from "@client/components/ui/data-table";
 import type { OwnerDTO } from "@core/contracts/dtos/owners";
 
-export const queryKey = "list-owners";
-
 export const columns: Column<OwnerDTO>[] = [
   {
     id: "select",
