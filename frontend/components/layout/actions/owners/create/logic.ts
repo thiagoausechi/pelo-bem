@@ -5,6 +5,7 @@ import {
   type CreateOwnerFormData,
 } from "@core/contracts/forms/owners";
 import type { HttpResponse } from "@core/http";
+import { useQueryClient } from "@tanstack/react-query";
 
 const sendCreateOwnerRequest = async (values: CreateOwnerFormData) => {
   const formData = new FormData();
@@ -27,6 +28,8 @@ const sendCreateOwnerRequest = async (values: CreateOwnerFormData) => {
 };
 
 export function useCreateOwnerLogic() {
+  const queryClient = useQueryClient();
+
   const formContext = useForm({
     schema: createOwnerForm,
     defaultValues: {
@@ -37,6 +40,9 @@ export function useCreateOwnerLogic() {
     },
     requestFn: sendCreateOwnerRequest,
     successMessage: "Cuidador criado com sucesso!",
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["owners"] });
+    },
   });
 
   const profilePictureFile = formContext.form.watch("profilePicture");
