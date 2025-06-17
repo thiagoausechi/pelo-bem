@@ -22,6 +22,8 @@ export interface SelectFieldProps<TOption> {
   getOptionLabel: (option: TOption) => React.ReactNode;
   renderOption?: (option: TOption, selected: boolean) => React.ReactNode;
 
+  disabled?: boolean;
+
   className?: string;
   value?: string;
   onChange: (value: string) => void;
@@ -35,6 +37,7 @@ function SelectDropdown<TOption>(props: SelectFieldProps<TOption>) {
     getOptionValue,
     getOptionLabel,
     renderOption,
+    disabled = false,
     value,
     onChange,
     className,
@@ -50,6 +53,7 @@ function SelectDropdown<TOption>(props: SelectFieldProps<TOption>) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disabled}
           className={cn("w-full justify-between", className)}
         >
           {selectedOption ? getOptionLabel(selectedOption) : placeholder}
