@@ -49,7 +49,6 @@ export class PgOwnerGateway implements OwnerGateway {
       const createdOwner = await this.mapper.toEntity(row[0]!);
       return ok(createdOwner as Entry<Owner>);
     } catch (error) {
-      console.error("Erro ao criar o cuidador:", error);
       return err(
         new UnexpectedError("Erro ao criar o cuidador", error as Error),
       );
@@ -71,7 +70,6 @@ export class PgOwnerGateway implements OwnerGateway {
       const updatedOwner = await this.mapper.toEntity(row[0]!);
       return ok(updatedOwner as Entry<Owner>);
     } catch (error) {
-      console.error("Erro ao atualizar o cuidador:", error);
       return err(
         new UnexpectedError("Erro ao atualizar o cuidador", error as Error),
       );
