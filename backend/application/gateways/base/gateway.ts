@@ -26,7 +26,9 @@ export interface ListOptions<TOrderByKey> {
 }
 
 export interface BaseGateway<TEntity extends object, TEntry = Entry<TEntity>> {
-  create(entity: TEntity): Promise<Result<TEntry, EntryAlreadyExistsError>>;
+  create(
+    entity: TEntity,
+  ): Promise<Result<TEntry, EntryAlreadyExistsError | UnexpectedError>>;
   update(
     entity: Partial<TEntity> & { id: string },
   ): Promise<Result<TEntry, NotFoundError | UnexpectedError>>;
