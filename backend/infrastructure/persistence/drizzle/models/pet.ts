@@ -4,7 +4,7 @@ import { smallint, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
 import { owners } from "./owner";
 
-export const specieEnum = appSchema.enum("personality", species);
+export const specieEnum = appSchema.enum("specie", species);
 
 export const genderEnum = appSchema.enum("gender", genders);
 
