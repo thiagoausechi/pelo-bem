@@ -78,13 +78,11 @@ export function parseListOptions<TEntity extends object>(params: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Não há impacto significativo no uso de 'any' aqui, pois é um tipo genérico para o modelo do banco de dados.
   table: PgTableWithColumns<any>;
 }) {
-  if (!params.options) return undefined;
-
   const { options, filters, table } = params;
 
-  return {
-    limit: options.limit ?? 10,
-    offset: options.offset ?? 0,
+  const result = {
+    limit: options?.limit ?? 10,
+    offset: options?.offset ?? 0,
     where: parseFilters({ filters, table }),
     orderBy: options?.orderBy
       ? [
@@ -92,14 +90,13 @@ export function parseListOptions<TEntity extends object>(params: {
             ? desc(table[options.orderBy])
             : asc(table[options.orderBy]),
         ]
-      : table.createdAt !== undefined
-        ? [
-            options?.orderDirection === "desc"
-              ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                desc(table.createdAt)
-              : // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                asc(table.createdAt),
-          ]
-        : undefined,
+      : [
+          options?.orderDirection === "desc"
+            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              desc(table.createdAt)
+            : // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              asc(table.createdAt),
+        ],
   };
+  return result;
 }
