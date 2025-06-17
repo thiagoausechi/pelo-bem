@@ -11,11 +11,11 @@ import type {
 import { Owner } from "@server/domain/entities/owner";
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
-import { asc, count, desc, eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { db } from "..";
 import { PgOwnerMapper } from "../mappers/owner";
 import { owners } from "../models/owner";
-import { parseFilters } from "./parse-filters";
+import { parseFilters, parseListOptions } from "./parse-filters";
 
 interface Dependencies {
   emailValidator: EmailValidator;
@@ -83,22 +83,9 @@ export class PgOwnerGateway implements OwnerGateway {
     options?: ListOptions<keyof Owner>,
   ): Promise<Entry<Owner>[]> {
     try {
-      const result = await db.query.owners.findMany({
-        limit: options?.limit ?? 10,
-        offset: options?.offset ?? 0,
-        where: parseFilters({ filters, table: owners }),
-        orderBy: options?.orderBy
-          ? [
-              options.orderDirection === "desc"
-                ? desc(owners[options.orderBy])
-                : asc(owners[options.orderBy]),
-            ]
-          : [
-              options?.orderDirection === "desc"
-                ? desc(owners.createdAt)
-                : asc(owners.createdAt),
-            ],
-      });
+      const result = await db.query.owners.findMany(
+        parseListOptions({ filters, options, table: owners }),
+      );
 
       const entries = await Promise.all(
         result.map((row) => this.mapper.toEntity(row) as Promise<Entry<Owner>>),
