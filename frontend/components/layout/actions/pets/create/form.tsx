@@ -238,7 +238,10 @@ export function CreatePetForm() {
                       <FormControl>
                         <SelectRadioGroup
                           className="grid-cols-2"
-                          options={genders.map((id) => GendersInfo[id])}
+                          options={genders.map((id) => ({
+                            ...GendersInfo[id],
+                            id,
+                          }))}
                           getOptionValue={({ id }) => id}
                           renderOption={({ label, icon }) => (
                             <div className="flex flex-1 justify-between">
