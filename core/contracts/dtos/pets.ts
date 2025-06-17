@@ -1,3 +1,4 @@
+import type { Gender, Specie } from "../enums/pets";
 import type { OwnerDTO } from "./owners";
 
 export interface PetDTO {
@@ -5,11 +6,11 @@ export interface PetDTO {
   owner: Omit<OwnerDTO, "pets">;
   picture?: string;
   name: string;
-  specie: string;
+  specie: Specie;
   breed: string;
   age: string; // Para visualização, ex: "2 anos"
   birthday: Date; // Para ordenação
   weightKg: number;
   heightCm: number;
-  gender: string;
+  gender: Gender;
 }

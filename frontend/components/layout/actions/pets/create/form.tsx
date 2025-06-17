@@ -28,18 +28,17 @@ import { SelectorField } from "@client/components/ui/selector-field";
 import { cn } from "@client/lib/utils";
 import { capitalize } from "@core/capitalize";
 import { AVATAR_INPUT_ACCEPT } from "@core/contracts/avatar-picutre";
-import { species, SpeciesInfo } from "@core/contracts/enums/pets";
-import { type Gender } from "@server/domain/entities/pet";
+import {
+  genders,
+  GendersInfo,
+  species,
+  SpeciesInfo,
+} from "@core/contracts/enums/pets";
 import { format } from "date-fns";
-import { CalendarIcon, CheckIcon, Mars, Venus } from "lucide-react";
+import { CalendarIcon, CheckIcon } from "lucide-react";
 import React from "react";
 import { ptBR } from "react-day-picker/locale";
 import { useCreatePetLogic } from "./logic";
-
-const gendersInfo: { id: Gender; name: string; icon: React.ReactNode }[] = [
-  { id: "MALE", name: "Macho", icon: <Mars className="size-4" /> },
-  { id: "FEMALE", name: "Fêmea", icon: <Venus className="size-4" /> },
-];
 
 export function CreatePetForm() {
   const {
@@ -242,11 +241,13 @@ export function CreatePetForm() {
                       <FormControl>
                         <SelectRadioGroup
                           className="grid-cols-2"
-                          options={gendersInfo}
+                          options={genders.map((id) => GendersInfo[id])}
                           getOptionValue={({ id }) => id}
-                          renderOption={({ name, icon }) => (
+                          renderOption={({ label, icon }) => (
                             <div className="flex flex-1 justify-between">
-                              <div className="font-medium">{name}</div>
+                              <div className="font-medium">
+                                {capitalize(label)}
+                              </div>
                               <div className="text-muted-foreground">
                                 {icon}
                               </div>

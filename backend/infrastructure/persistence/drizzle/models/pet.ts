@@ -1,5 +1,4 @@
-import { species } from "@core/contracts/enums/pets";
-import { genders } from "@server/domain/entities/pet";
+import { genders, species } from "@core/contracts/enums/pets";
 import { relations } from "drizzle-orm";
 import { smallint, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";

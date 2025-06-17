@@ -1,7 +1,6 @@
-import { genders } from "@server/domain/entities/pet";
 import { z } from "zod";
 import { avatarPictureSchema } from "../avatar-picutre";
-import { species } from "../enums/pets";
+import { genders, species } from "../enums/pets";
 
 export const createPetForm = z.object({
   ownerId: z.string().min(1, "O cuidador é obrigatório."),

@@ -1,12 +1,3 @@
-/**
- * Esta importação NÃO deveria acontecer, o correto seria importar de "@core/contracts/forms/pet".
- * Porém o servidor foi desenhado de outra forma. Para evitar a refatoração do servidor,
- * importamos de "@server/domain/entities/pet" para manter a compatibilidade.
- *
- * TODO: Refatorar o servidor para que as entidades sejam importadas de "@core/contracts/forms/pet" e não de "@server/domain/entities/pet".
- */
-import { genders } from "@server/domain/entities/pet";
-
 import { useAvatarPreview } from "@client/hooks/avatar-preview";
 import { useForm } from "@client/hooks/form";
 import {
@@ -15,7 +6,7 @@ import {
 } from "@client/services/owners";
 import { makeMutation } from "@client/services/query";
 import type { PetDTO } from "@core/contracts/dtos/pets";
-import { species } from "@core/contracts/enums/pets";
+import { genders, species } from "@core/contracts/enums/pets";
 import {
   createPetForm,
   type CreatePetFormData,
