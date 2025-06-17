@@ -1,10 +1,10 @@
+import type { ServiceOrderStatus } from "@core/contracts/enums/service-orders";
 import { err, ok, type Result } from "@core/result";
 import { EmptyPropertyError } from "@server/domain/errors";
 import { BaseEntity, type BaseEntityProps } from "../base";
 import { Pet } from "../pet";
 import { Veterinarian } from "../veterinarian";
 import type { ServiceType } from "./service-type";
-import type { ServiceOrderStatus } from "./status.enum";
 
 interface ServiceOrderProps extends BaseEntityProps {
   petId: string;

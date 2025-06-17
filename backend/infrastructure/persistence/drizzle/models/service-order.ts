@@ -1,4 +1,4 @@
-import { serviceOrderStatus } from "@server/domain/entities/service-order";
+import { serviceOrderStatus } from "@core/contracts/enums/service-orders";
 import { relations } from "drizzle-orm";
 import { timestamp, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
