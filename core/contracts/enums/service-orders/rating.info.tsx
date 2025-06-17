@@ -1,20 +1,5 @@
 import { Angry, Frown, Meh, Smile, SmilePlus } from "lucide-react";
-
-export const ratings = [
-  "EXCELLENT",
-  "GOOD",
-  "AVERAGE",
-  "POOR",
-  "TERRIBLE",
-] as const;
-
-export type Rating = (typeof ratings)[number];
-
-export interface RatingInfo {
-  label: string;
-  icon: React.ReactNode;
-  score: number;
-}
+import type { Rating, RatingInfo } from "./rating";
 
 export const RatingsInfo: Record<Rating, RatingInfo> = {
   EXCELLENT: {

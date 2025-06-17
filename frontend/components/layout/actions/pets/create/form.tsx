@@ -28,12 +28,9 @@ import { SelectorField } from "@client/components/ui/selector-field";
 import { cn } from "@client/lib/utils";
 import { capitalize } from "@core/capitalize";
 import { AVATAR_INPUT_ACCEPT } from "@core/contracts/avatar-picutre";
-import {
-  genders,
-  GendersInfo,
-  species,
-  SpeciesInfo,
-} from "@core/contracts/enums/pets";
+import { genders, species } from "@core/contracts/enums/pets";
+import { GendersInfo } from "@core/contracts/enums/pets/genders.info";
+import { SpeciesInfo } from "@core/contracts/enums/pets/species.info";
 import { format } from "date-fns";
 import { CalendarIcon, CheckIcon } from "lucide-react";
 import React from "react";

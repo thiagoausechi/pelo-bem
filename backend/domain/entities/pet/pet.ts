@@ -1,8 +1,5 @@
-import {
-  SpeciesInfo,
-  type Gender,
-  type Specie,
-} from "@core/contracts/enums/pets";
+import { type Gender, type Specie } from "@core/contracts/enums/pets";
+import { SpeciesInfo } from "@core/contracts/enums/pets/species.info";
 import { err, ok, type Result } from "@core/result";
 import {
   EmptyPropertyError,

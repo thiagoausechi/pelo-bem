@@ -1,15 +1,5 @@
 import { Bird, Cat, Dog } from "lucide-react";
-
-export const species = ["DOG", "CAT", "BIRD"] as const;
-
-export type Specie = (typeof species)[number];
-
-export interface SpecieInfo {
-  label: string;
-  icon: React.ReactNode;
-  weightKg: { min: number; max: number };
-  heightCm: { min: number; max: number };
-}
+import type { Specie, SpecieInfo } from "./species";
 
 export const SpeciesInfo: Record<Specie, SpecieInfo> = {
   DOG: {
