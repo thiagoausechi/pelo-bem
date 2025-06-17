@@ -8,6 +8,7 @@ import type {
   ListOptions,
 } from "@server/application/gateways/base/gateway";
 import type { Pet } from "@server/domain/entities/pet";
+import { count } from "drizzle-orm";
 import { db } from "..";
 import { owners } from "../models/owner";
 import { pets } from "../models/pet";
@@ -40,7 +41,12 @@ export class PgPetGateway implements PetGateway {
   }
 
   async count(filters?: FiltersFor<Pet>): Promise<number> {
-    throw new Error("Method not implemented.");
+    const result = await db
+      .select({ count: count() })
+      .from(pets)
+      .where(parseFilters({ filters, table: pets }));
+
+    return result[0]?.count ?? 0;
   }
 
   async existsBy(filters: FiltersFor<Pet>): Promise<boolean> {
