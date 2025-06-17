@@ -81,7 +81,7 @@ export function parseListOptions<TEntity extends object>(params: {
   const { options, filters, table } = params;
 
   const result = {
-    limit: options?.limit ?? 10,
+    limit: options?.limit ?? 500,
     offset: options?.offset ?? 0,
     where: parseFilters({ filters, table }),
     orderBy: options?.orderBy
