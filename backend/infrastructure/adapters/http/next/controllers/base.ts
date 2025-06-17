@@ -27,7 +27,9 @@ export class NextJsController {
       .slice(1); // -> ["[id]"] ou mais segmentos caso haja
   }
 
-  protected async handleRequest(handler: () => Promise<NextResponse>) {
+  protected async handleRequest<T = unknown>(
+    handler: () => Promise<NextResponse<T>>,
+  ) {
     try {
       const response = await handler();
       return response;
