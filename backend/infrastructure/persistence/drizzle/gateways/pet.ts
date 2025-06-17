@@ -1,5 +1,6 @@
-import type { Result } from "@core/result";
-import type { NotFoundError } from "@server/application/errors/not-found";
+import { err, ok, type Result } from "@core/result";
+import { NotFoundError } from "@server/application/errors/not-found";
+import { UnexpectedError } from "@server/application/errors/unexpected";
 import type { PetGateway } from "@server/application/gateways";
 import type { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
 import type {
@@ -7,7 +8,7 @@ import type {
   FiltersFor,
   ListOptions,
 } from "@server/application/gateways/base/gateway";
-import type { Pet } from "@server/domain/entities/pet";
+import { Pet } from "@server/domain/entities/pet";
 import { count } from "drizzle-orm";
 import { db } from "..";
 import { PgPetMapper } from "../mappers/pet";
@@ -43,8 +44,26 @@ export class PgPetGateway implements PetGateway {
 
   async findBy(
     filters: FiltersFor<Pet>,
-  ): Promise<Result<Entry<Pet>, NotFoundError>> {
-    throw new Error("Method not implemented.");
+  ): Promise<Result<Entry<Pet>, NotFoundError | UnexpectedError>> {
+    try {
+      const result = await db
+        .select()
+        .from(pets)
+        .where(parseFilters({ filters, table: pets }))
+        .limit(1);
+
+      if (result.length === 0) return err(new NotFoundError(Pet.ENTITY_NAME));
+      const pet = await this.mapper.toEntity(result[0]!);
+
+      return ok(pet as Entry<Pet>);
+    } catch (error) {
+      return err(
+        new UnexpectedError(
+          "Um erro inesperado ocorreu ao tentar encontrar o cuidador",
+          error as Error,
+        ),
+      );
+    }
   }
 
   async count(filters?: FiltersFor<Pet>): Promise<number> {
