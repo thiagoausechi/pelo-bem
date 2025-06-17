@@ -1,6 +1,5 @@
 import type { OwnerDTO } from "@core/contracts/dtos/owners";
-import type { HttpResponse } from "@core/http";
-import type { QueryFunction } from "@tanstack/react-query";
+import { makeQuery } from "../query";
 
 export const ownersManagementListQueryKey = [
   "owners",
@@ -8,14 +7,4 @@ export const ownersManagementListQueryKey = [
   "owners-management-list",
 ] as const;
 
-export const fetchOwnersManagementList: QueryFunction<
-  OwnerDTO[]
-> = async () => {
-  const response = await fetch("/api/owners");
-
-  const body = (await response.json()) as HttpResponse<OwnerDTO[]>;
-
-  if ("error" in body) throw body.error;
-
-  return body.data;
-};
+export const fetchOwnersManagementList = makeQuery<OwnerDTO[]>("/owners");
