@@ -9,7 +9,7 @@ import type {
   ListOptions,
 } from "@server/application/gateways/base/gateway";
 import { Pet } from "@server/domain/entities/pet";
-import { count } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { db } from "..";
 import { PgPetMapper } from "../mappers/pet";
 import { owners } from "../models/owner";
@@ -25,14 +25,29 @@ export class PgPetGateway implements PetGateway {
 
   async create(
     entity: Pet,
-  ): Promise<Result<Entry<Pet>, EntryAlreadyExistsError>> {
+  ): Promise<Result<Entry<Pet>, EntryAlreadyExistsError | UnexpectedError>> {
     throw new Error("Method not implemented.");
   }
 
   async update(
     entity: Partial<Pet> & { id: string },
-  ): Promise<Result<Entry<Pet>, NotFoundError>> {
-    throw new Error("Method not implemented.");
+  ): Promise<Result<Entry<Pet>, NotFoundError | UnexpectedError>> {
+    try {
+      const row = await db
+        .update(pets)
+        .set(await this.mapper.toPartialModel(entity))
+        .where(eq(pets.id, entity.id))
+        .returning();
+
+      if (row.length === 0) return err(new NotFoundError(Pet.ENTITY_NAME));
+
+      const updatedPet = await this.mapper.toEntity(row[0]!);
+      return ok(updatedPet as Entry<Pet>);
+    } catch (error) {
+      return err(
+        new UnexpectedError("Erro ao atualizar o pet", error as Error),
+      );
+    }
   }
 
   async listAll(
