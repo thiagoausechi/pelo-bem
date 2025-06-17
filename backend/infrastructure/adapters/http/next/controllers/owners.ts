@@ -1,15 +1,21 @@
+import type { OwnerDTO } from "@core/contracts/dtos/owners";
 import { createOwnerForm } from "@core/contracts/forms/owners";
 import { HttpStatus } from "@core/http";
-import type { OwnerGateway } from "@server/application/gateways";
+import type { OwnerGateway, PetGateway } from "@server/application/gateways";
 import type { FileStorageGateway } from "@server/application/gateways/file-storage";
-import { CreateOwnerUseCase } from "@server/application/usecases/owner";
+import {
+  CreateOwnerUseCase,
+  ListOwnersUseCase,
+} from "@server/application/usecases/owner";
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
+import { env } from "@server/infrastructure/configs/env";
 import { type NextRequest, type NextResponse } from "next/server";
 import { NextJsController } from "./base";
 
 interface Dependencies {
   ownerGateway: OwnerGateway;
+  petGateway: PetGateway;
   emailValidator: EmailValidator;
   phoneValidator: PhoneValidator;
   fileStorage: FileStorageGateway;
@@ -20,8 +26,28 @@ export class NextJsOwnersController extends NextJsController {
     super();
   }
 
-  async handleGet(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
+  async handleGet(request: NextRequest): Promise<NextResponse> {
+    return this.handleRequest(async () => {
+      const pathSegments = this.parsePath(request);
+      const id = pathSegments.length > 0 ? pathSegments[0] : undefined;
+
+      const useCaseResponse = await new ListOwnersUseCase(this.deps).execute({
+        filters: id ? { id } : undefined,
+      });
+
+      const result: OwnerDTO[] = useCaseResponse.map(({ owner, pets }) => ({
+        ...owner,
+        pets: pets.length, // TODO: Retonar aqui após criar o PetDTO
+        profile: `${env.S3_PUBLIC_URL}/owners/${owner.id}.png`,
+        name: owner.fullname,
+        email: owner.email.get(),
+        phone: owner.phone.get(),
+        createdAt: owner.createdAt,
+        updatedAt: owner.updatedAt,
+      }));
+
+      return HttpStatus.OK(result);
+    });
   }
 
   async handlePost(request: NextRequest): Promise<NextResponse> {
