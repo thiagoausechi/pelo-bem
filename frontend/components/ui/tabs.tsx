@@ -40,7 +40,10 @@ function Tabs<TTabsConfig extends TabsConfig>({
         <Label htmlFor="view-selector" className="sr-only">
           Seletor de visualização
         </Label>
-        <Select defaultValue={defaultTab as string}>
+        <Select
+          defaultValue={defaultTab as string}
+          onValueChange={rest.onValueChange}
+        >
           <SelectTrigger
             className="flex w-fit @4xl/main:hidden"
             size="sm"
