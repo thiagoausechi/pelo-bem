@@ -1,7 +1,7 @@
+import type { Rating } from "@core/contracts/enums/service-orders";
 import { err, ok, type Result } from "@core/result";
 import { EmptyPropertyError } from "@server/domain/errors";
 import { BaseEntity, type BaseEntityProps } from "../base";
-import type { Rating } from "./rating.enum";
 
 interface SatisfactionProps extends BaseEntityProps {
   serviceOrderId: string;

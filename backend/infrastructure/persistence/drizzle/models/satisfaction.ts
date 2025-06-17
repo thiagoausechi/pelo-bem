@@ -1,4 +1,4 @@
-import { ratings } from "@server/domain/entities/service-order";
+import { ratings } from "@core/contracts/enums/service-orders";
 import { relations } from "drizzle-orm";
 import { text, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
