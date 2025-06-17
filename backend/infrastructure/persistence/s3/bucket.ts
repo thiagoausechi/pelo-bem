@@ -7,6 +7,7 @@ import {
   type S3Client,
 } from "@aws-sdk/client-s3";
 import { UnexpectedError } from "@server/application/errors/unexpected";
+import { env } from "@server/infrastructure/configs/env";
 
 export class Bucket {
   constructor(
@@ -140,8 +141,7 @@ export class Bucket {
               {
                 AllowedHeaders: [],
                 AllowedMethods: ["GET", "HEAD"],
-                // TODO: Ajustar para utilizar variáveis de ambiente
-                AllowedOrigins: ["http://localhost:3000"],
+                AllowedOrigins: [env.APP_URL],
                 ExposeHeaders: [],
                 MaxAgeSeconds: 3000,
               },
