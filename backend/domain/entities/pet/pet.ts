@@ -31,7 +31,6 @@ export class Pet extends BaseEntity {
   public readonly weightKg: number;
   public readonly heightCm: number;
   public readonly gender: Gender;
-  public readonly picture?: string;
 
   private constructor(props: PetProps) {
     super(Pet.ENTITY_NAME, props);
