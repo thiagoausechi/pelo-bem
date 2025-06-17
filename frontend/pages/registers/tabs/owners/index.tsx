@@ -1,18 +1,20 @@
-import type { OwnerDTO } from "@core/contracts/dtos/owners";
+import {
+  fetchOwnersManagementList,
+  ownersManagementListQueryKey,
+} from "@client/services/owners";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
 import { OwnersManagementTable } from "./management-table";
-import { queryKey } from "./management-table/config";
 
 export async function OwnersRegisterTab() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: [queryKey],
-    queryFn: async () => [] as OwnerDTO[],
+    queryKey: ownersManagementListQueryKey,
+    queryFn: fetchOwnersManagementList,
   });
 
   return (

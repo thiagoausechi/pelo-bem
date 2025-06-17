@@ -2,19 +2,22 @@
 
 import { CreateOwnerAction } from "@client/components/layout/actions/owners/create";
 import { DataTable } from "@client/components/ui/data-table";
-import type { OwnerDTO } from "@core/contracts/dtos/owners";
+import {
+  fetchOwnersManagementList,
+  ownersManagementListQueryKey,
+} from "@client/services/owners";
 import { useQuery } from "@tanstack/react-query";
-import { columns, queryKey } from "./config";
+import { columns } from "./config";
 
 export function OwnersManagementTable() {
   const { data, isLoading, isFetching, isError } = useQuery({
-    queryKey: [queryKey],
-    queryFn: async () => Promise.resolve([] as OwnerDTO[]), // TODO: Replace with actual API call
+    queryKey: ownersManagementListQueryKey,
+    queryFn: fetchOwnersManagementList,
   });
 
   return (
     <DataTable
-      data={data ?? ([] as OwnerDTO[])}
+      data={data ?? []}
       columns={columns}
       actions={[<CreateOwnerAction key="new-owner" />]}
       search={{
