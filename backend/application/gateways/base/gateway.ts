@@ -29,7 +29,7 @@ export interface BaseGateway<TEntity extends object, TEntry = Entry<TEntity>> {
   create(entity: TEntity): Promise<Result<TEntry, EntryAlreadyExistsError>>;
   update(
     entity: Partial<TEntity> & { id: string },
-  ): Promise<Result<TEntry, NotFoundError>>;
+  ): Promise<Result<TEntry, NotFoundError | UnexpectedError>>;
   listAll(
     filters?: FiltersFor<TEntity>,
     options?: ListOptions<keyof TEntity>,
