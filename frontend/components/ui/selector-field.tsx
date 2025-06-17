@@ -62,8 +62,8 @@ function SelectDropdown<TOption>(props: SelectFieldProps<TOption>) {
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0">
         <Command loop>
+          <CommandInput placeholder={searchPlaceholder} />
           <CommandList className="h-(--cmdk-list-height) max-h-[400px]">
-            <CommandInput placeholder={searchPlaceholder} />
             <CommandEmpty>Nenhuma opção encontrada.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
