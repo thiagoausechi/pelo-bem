@@ -2,7 +2,7 @@ import { err, ok, type Result } from "@core/result";
 import { NotFoundError } from "@server/application/errors/not-found";
 import { UnexpectedError } from "@server/application/errors/unexpected";
 import type { PetGateway } from "@server/application/gateways";
-import type { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
+import { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
 import type {
   Entry,
   FiltersFor,
@@ -26,7 +26,22 @@ export class PgPetGateway implements PetGateway {
   async create(
     entity: Pet,
   ): Promise<Result<Entry<Pet>, EntryAlreadyExistsError | UnexpectedError>> {
-    throw new Error("Method not implemented.");
+    try {
+      if (entity.id)
+        if (await this.existsBy({ id: entity.id }))
+          // ^ Não fazemos uma query desnecessária se não houver ID
+          return err(new EntryAlreadyExistsError());
+
+      const row = await db
+        .insert(pets)
+        .values(await this.mapper.toModel(entity))
+        .returning();
+
+      const createdPet = await this.mapper.toEntity(row[0]!);
+      return ok(createdPet as Entry<Pet>);
+    } catch (error) {
+      return err(new UnexpectedError("Erro ao criar o pet", error as Error));
+    }
   }
 
   async update(
