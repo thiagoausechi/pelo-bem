@@ -57,8 +57,10 @@ export function useCreatePetLogic() {
     },
   });
 
+  const ownerSelected = !!formContext.form.watch("ownerId");
+
   const pictureFile = formContext.form.watch("picture");
   const { previewUrl } = useAvatarPreview(pictureFile);
 
-  return { ...formContext, previewUrl };
+  return { ...formContext, ownerSelected, previewUrl };
 }
