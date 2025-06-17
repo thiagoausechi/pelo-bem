@@ -150,6 +150,7 @@ export class Bucket {
         }),
       );
     } catch (error) {
+      if (this.isCode(error, "NotImplemented")) return;
       throw new UnexpectedError(
         "Erro ao configurar CORS para o bucket",
         error as Error,
