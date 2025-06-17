@@ -5,7 +5,7 @@
  *
  * TODO: Refatorar o servidor para que as entidades sejam importadas de "@core/contracts/forms/pet" e não de "@server/domain/entities/pet".
  */
-import { genders, species } from "@server/domain/entities/pet";
+import { genders } from "@server/domain/entities/pet";
 
 import { useAvatarPreview } from "@client/hooks/avatar-preview";
 import { useForm } from "@client/hooks/form";
@@ -15,6 +15,7 @@ import {
 } from "@client/services/owners";
 import { makeMutation } from "@client/services/query";
 import type { PetDTO } from "@core/contracts/dtos/pets";
+import { species } from "@core/contracts/enums/pets";
 import {
   createPetForm,
   type CreatePetFormData,

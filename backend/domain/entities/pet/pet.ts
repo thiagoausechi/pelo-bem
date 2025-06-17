@@ -1,3 +1,4 @@
+import { SpeciesInfo, type Specie } from "@core/contracts/enums/pets";
 import { err, ok, type Result } from "@core/result";
 import {
   EmptyPropertyError,
@@ -7,7 +8,6 @@ import {
 import { BaseEntity, type BaseEntityProps } from "../base";
 import { Owner } from "../owner";
 import type { Gender } from "./gender.enum";
-import { SpeciesInfo, type Specie } from "./species.enum";
 
 interface PetProps extends BaseEntityProps {
   ownerId: string;

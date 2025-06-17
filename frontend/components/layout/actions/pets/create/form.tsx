@@ -26,27 +26,15 @@ import {
 } from "@client/components/ui/popover";
 import { SelectorField } from "@client/components/ui/selector-field";
 import { cn } from "@client/lib/utils";
+import { capitalize } from "@core/capitalize";
 import { AVATAR_INPUT_ACCEPT } from "@core/contracts/avatar-picutre";
-import { type Gender, type Specie } from "@server/domain/entities/pet";
+import { species, SpeciesInfo } from "@core/contracts/enums/pets";
+import { type Gender } from "@server/domain/entities/pet";
 import { format } from "date-fns";
-import {
-  Bird,
-  CalendarIcon,
-  Cat,
-  CheckIcon,
-  Dog,
-  Mars,
-  Venus,
-} from "lucide-react";
+import { CalendarIcon, CheckIcon, Mars, Venus } from "lucide-react";
 import React from "react";
 import { ptBR } from "react-day-picker/locale";
 import { useCreatePetLogic } from "./logic";
-
-const speciesInfo: { id: Specie; name: string; icon: React.ReactNode }[] = [
-  { id: "DOG", name: "Cachorro", icon: <Dog className="size-4" /> },
-  { id: "CAT", name: "Gato", icon: <Cat className="size-4" /> },
-  { id: "BIRD", name: "Pássaro", icon: <Bird className="size-4" /> },
-];
 
 const gendersInfo: { id: Gender; name: string; icon: React.ReactNode }[] = [
   { id: "MALE", name: "Macho", icon: <Mars className="size-4" /> },
@@ -205,11 +193,16 @@ export function CreatePetForm() {
                       <FormLabel>Espécie</FormLabel>
                       <FormControl>
                         <SelectRadioGroup
-                          options={speciesInfo}
+                          options={species.map((id) => ({
+                            id,
+                            ...SpeciesInfo[id],
+                          }))}
                           getOptionValue={({ id }) => id}
-                          renderOption={({ name, icon }) => (
+                          renderOption={({ label, icon }) => (
                             <div className="flex flex-1 justify-between">
-                              <div className="font-medium">{name}</div>
+                              <div className="font-medium">
+                                {capitalize(label)}
+                              </div>
                               <div className="text-muted-foreground">
                                 {icon}
                               </div>
