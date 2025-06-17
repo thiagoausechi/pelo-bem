@@ -1,7 +1,7 @@
-import { NextJsPetsController } from "@server/infrastructure/adapters/http/next/controllers";
+import { Controllers } from "@server/infrastructure/factories";
 import { type NextRequest, type NextResponse } from "next/server";
 
-const controller = new NextJsPetsController();
+const controller = Controllers.petsController;
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   return controller.handleGet(request);

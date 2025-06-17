@@ -1,4 +1,7 @@
-import { NextJsOwnersController } from "./adapters/http/next/controllers";
+import {
+  NextJsOwnersController,
+  NextJsPetsController,
+} from "./adapters/http/next/controllers";
 import { env } from "./configs/env";
 import { PgOwnerGateway, PgPetGateway } from "./persistence/drizzle/gateways";
 import { s3 } from "./persistence/s3";
@@ -36,5 +39,9 @@ export const Controllers = {
   ownersController: getOrCreate(
     "ownersController",
     () => new NextJsOwnersController({ ...Validators, ...Gateways }),
+  ),
+  petsController: getOrCreate(
+    "petsController",
+    () => new NextJsPetsController({ ...Validators, ...Gateways }),
   ),
 };
