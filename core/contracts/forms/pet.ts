@@ -3,7 +3,7 @@ import { z } from "zod";
 import { avatarPictureSchema } from "../avatar-picutre";
 
 export const createPetForm = z.object({
-  ownerId: z.string().min(1, "ID do dono é obrigatório."),
+  ownerId: z.string().min(1, "O cuidador é obrigatório."),
   name: z.string().min(1, "Nome é obrigatório."),
   specie: z.enum(species),
   breed: z.string().min(1, "Raça é obrigatória."),
