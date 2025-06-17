@@ -1,6 +1,7 @@
 import type { TransformToRange } from "@core/range";
 import type { Result } from "@core/result";
 import type { NotFoundError } from "@server/application/errors/not-found";
+import type { UnexpectedError } from "@server/application/errors/unexpected";
 import type { EntryAlreadyExistsError } from "./entry-already-exists";
 
 export type FiltersFor<TEntity extends object> = Partial<
@@ -33,7 +34,9 @@ export interface BaseGateway<TEntity extends object, TEntry = Entry<TEntity>> {
     filters?: FiltersFor<TEntity>,
     options?: ListOptions<keyof TEntity>,
   ): Promise<TEntry[]>;
-  findBy(filters: FiltersFor<TEntity>): Promise<Result<TEntry, NotFoundError>>;
+  findBy(
+    filters: FiltersFor<TEntity>,
+  ): Promise<Result<TEntry, NotFoundError | UnexpectedError>>;
   count(filters?: FiltersFor<TEntity>): Promise<number>;
   existsBy(filters: FiltersFor<TEntity>): Promise<boolean>;
 }
