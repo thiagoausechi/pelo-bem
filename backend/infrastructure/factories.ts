@@ -6,7 +6,11 @@ import { env } from "./configs/env";
 import { PgOwnerGateway, PgPetGateway } from "./persistence/drizzle/gateways";
 import { s3 } from "./persistence/s3";
 import { S3FileStorageGateway } from "./persistence/s3/gateways";
-import { ZodEmailValidator, ZodPhoneValidator } from "./validators/zod";
+import {
+  ZodEmailValidator,
+  ZodLicenseNumberValidator,
+  ZodPhoneValidator,
+} from "./validators/zod";
 
 const globalForDependencies = globalThis as Record<string, unknown>;
 
@@ -21,6 +25,7 @@ function getOrCreate<T>(key: string, creator: () => T): T {
 export const Validators = {
   emailValidator: getOrCreate("emailValidator", () => new ZodEmailValidator()),
   phoneValidator: getOrCreate("phoneValidator", () => new ZodPhoneValidator()),
+  licenseValidator: getOrCreate("licenseValidator", () => new ZodLicenseNumberValidator()), // prettier-ignore
 };
 
 export const Gateways = {
