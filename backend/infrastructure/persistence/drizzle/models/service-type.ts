@@ -5,7 +5,7 @@ export const serviceType = appSchema.table("service_type", {
   ...baseSchema,
 
   name: text("name").notNull().unique(),
-  description: text("description"),
+  description: text("description").notNull(),
   price: real("price").notNull(),
 });
 

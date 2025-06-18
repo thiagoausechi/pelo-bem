@@ -11,18 +11,24 @@ export const statusEnum = appSchema.enum("status", serviceOrderStatus);
 export const serviceOrders = appSchema.table("service_orders", {
   ...baseSchema,
 
-  petId: uuid("pet_id").references(() => pets.id, {
-    onDelete: "cascade",
-    onUpdate: "cascade",
-  }),
-  veterinarianId: uuid("veterinarian_id").references(() => veterinarians.id, {
-    onDelete: "cascade",
-    onUpdate: "cascade",
-  }),
-  serviceTypeId: uuid("service_type_id").references(() => serviceType.id, {
-    onDelete: "cascade",
-    onUpdate: "cascade",
-  }),
+  petId: uuid("pet_id")
+    .references(() => pets.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
+    .notNull(),
+  veterinarianId: uuid("veterinarian_id")
+    .references(() => veterinarians.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
+    .notNull(),
+  serviceTypeId: uuid("service_type_id")
+    .references(() => serviceType.id, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    })
+    .notNull(),
   appointmentDate: timestamp("appointment_date", {
     withTimezone: true,
   }).notNull(),
