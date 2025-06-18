@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { avatarPictureSchema } from "../avatar-picutre";
 
-export const createVeterinatianForm = z.object({
+export const createVeterinarianForm = z.object({
   fullname: z.string().min(1, "Nome é obrigatório."),
   email: z.string().min(1, "E-mail é obrigatório."),
   phone: z.string().min(1, "Telefone é obrigatório."),
@@ -9,4 +9,4 @@ export const createVeterinatianForm = z.object({
   profilePicture: avatarPictureSchema.optional(),
 });
 
-export type CreateVeterinarianFormData = z.infer<typeof createVeterinatianForm>;
+export type CreateVeterinarianFormData = z.infer<typeof createVeterinarianForm>;
