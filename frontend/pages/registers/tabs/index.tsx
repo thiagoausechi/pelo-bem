@@ -3,6 +3,7 @@ import type { TabsConfig } from "@client/components/ui/tabs";
 import { HeartHandshake, PawPrint, Stethoscope } from "lucide-react";
 import { OwnersRegisterTab } from "./owners";
 import { PetsRegisterTab } from "./pets";
+import { VeterinariansRegisterTab } from "./veterinarians";
 
 export const REGISTERS_TABS = {
   owners: {
@@ -27,7 +28,7 @@ export const REGISTERS_TABS = {
         <Stethoscope className="text-muted-foreground h-4 w-4" /> Veterinários
       </Label>
     ),
-    content: <div>[WIP] Conteúdo dos Veterinários</div>,
+    content: <VeterinariansRegisterTab />,
   },
 } satisfies TabsConfig;
 
