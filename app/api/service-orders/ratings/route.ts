@@ -1,7 +1,7 @@
-import { NextJsServiceOrdersController } from "@server/infrastructure/adapters/http/next/controllers";
+import { Controllers } from "@server/infrastructure/factories";
 import { type NextRequest, type NextResponse } from "next/server";
 
-const controller = new NextJsServiceOrdersController();
+const controller = Controllers.serviceOrdersController;
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   return controller.handleGetSatisfaction(request);

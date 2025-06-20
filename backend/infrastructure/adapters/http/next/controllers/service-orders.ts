@@ -1,7 +1,22 @@
 import { HttpStatus } from "@core/http";
+import type {
+  PetGateway,
+  ServiceOrderGateway,
+  VeterinarianGateway,
+} from "@server/application/gateways";
 import type { NextRequest, NextResponse } from "next/server";
+import { NextJsController } from "./base";
 
-export class NextJsServiceOrdersController {
+interface Dependecies {
+  serviceOrderGateway: ServiceOrderGateway;
+  petGateway: PetGateway;
+  veterinarianGateway: VeterinarianGateway;
+}
+
+export class NextJsServiceOrdersController extends NextJsController {
+  constructor(private deps: Dependecies) {
+    super();
+  }
   async handleGetOrder(_: NextRequest): Promise<NextResponse> {
     return HttpStatus.NOT_IMPLEMENTED();
   }
