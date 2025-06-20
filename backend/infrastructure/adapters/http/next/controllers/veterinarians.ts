@@ -20,35 +20,15 @@ export class NextJsVeterinariansController extends NextJsController {
     super();
   }
 
-  async handleGetOrder(_: NextRequest): Promise<NextResponse> {
+  async handleGet(_: NextRequest): Promise<NextResponse> {
     return HttpStatus.NOT_IMPLEMENTED();
   }
 
-  async handlePostOrder(_: NextRequest): Promise<NextResponse> {
+  async handlePost(_: NextRequest): Promise<NextResponse> {
     return HttpStatus.NOT_IMPLEMENTED();
   }
 
-  async handlePutOrder(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
-  }
-
-  async handleGetServiceType(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
-  }
-
-  async handlePostServiceType(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
-  }
-
-  async handlePutServiceType(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
-  }
-
-  async handleGetSatisfaction(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
-  }
-
-  async handlePostSatisfaction(_: NextRequest): Promise<NextResponse> {
+  async handlePut(_: NextRequest): Promise<NextResponse> {
     return HttpStatus.NOT_IMPLEMENTED();
   }
 }
