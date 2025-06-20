@@ -11,7 +11,7 @@ export type FiltersFor<TEntity extends object> = {
       ? TEntity[K]
       : TEntity[K] extends object
         ? string
-        : never;
+        : TEntity[K];
 };
 
 /**
