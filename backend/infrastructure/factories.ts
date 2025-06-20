@@ -3,7 +3,11 @@ import {
   NextJsPetsController,
 } from "./adapters/http/next/controllers";
 import { env } from "./configs/env";
-import { PgOwnerGateway, PgPetGateway } from "./persistence/drizzle/gateways";
+import {
+  PgOwnerGateway,
+  PgPetGateway,
+  PgVeterinarianGateway,
+} from "./persistence/drizzle/gateways";
 import { s3 } from "./persistence/s3";
 import { S3FileStorageGateway } from "./persistence/s3/gateways";
 import {
@@ -34,6 +38,10 @@ export const Gateways = {
     () => new PgOwnerGateway(Validators),
   ),
   petGateway: getOrCreate("petGateway", () => new PgPetGateway()),
+  veterinarianGateway: getOrCreate(
+    "veterinarianGateway",
+    () => new PgVeterinarianGateway(Validators),
+  ),
   fileStorage: getOrCreate(
     "fileStorage",
     () => new S3FileStorageGateway(s3, env.S3_BUCKET_NAME),
