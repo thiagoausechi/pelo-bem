@@ -1,6 +1,7 @@
 import {
   NextJsOwnersController,
   NextJsPetsController,
+  NextJsVeterinariansController,
 } from "./adapters/http/next/controllers";
 import { env } from "./configs/env";
 import {
@@ -56,5 +57,9 @@ export const Controllers = {
   petsController: getOrCreate(
     "petsController",
     () => new NextJsPetsController({ ...Validators, ...Gateways }),
+  ),
+  veterinariansController: getOrCreate(
+    "veterinariansController",
+    () => new NextJsVeterinariansController({ ...Validators, ...Gateways }),
   ),
 };
