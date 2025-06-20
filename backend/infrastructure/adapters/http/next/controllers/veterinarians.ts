@@ -34,7 +34,7 @@ export class NextJsVeterinariansController extends NextJsController {
 
       const useCaseResponse = await new ListVeterinarianUseCase(
         this.deps,
-      ).execute({ filters: id! ? { id } : undefined });
+      ).execute({ filters: id ? { id } : undefined });
 
       const result: VeterinarianDTO[] = useCaseResponse.map(
         ({ veterinarian }) => ({
