@@ -15,7 +15,7 @@ const sendCreateVeterinarianRequest = makeMutation<
 >("/veterinarians", {
   valuesToFormData: (values) => {
     const formData = new FormData();
-    formData.append("name", values.fullname);
+    formData.append("fullname", values.fullname);
     formData.append("email", values.email);
     formData.append("phone", values.phone);
     formData.append("licenseState", values.licenseState);
