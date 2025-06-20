@@ -18,10 +18,8 @@ const sendCreateVeterinarianRequest = makeMutation<
     formData.append("name", values.fullname);
     formData.append("email", values.email);
     formData.append("phone", values.phone);
-    formData.append(
-      "license",
-      `${values.licenseState} ${values.licenseNumber}`,
-    );
+    formData.append("licenseState", values.licenseState);
+    formData.append("licenseNumber", values.licenseNumber);
     if (values.profilePicture)
       formData.append("profilePicture", values.profilePicture);
 
