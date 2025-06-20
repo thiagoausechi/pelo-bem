@@ -8,7 +8,7 @@ import { Phone, type PhoneValidator } from "@server/domain/value-objects/phone";
 import type {
   PgVeterinarianInsertModel,
   PgVeterinarianModel,
-} from "../models/veterinarians";
+} from "../models/veterinarian";
 
 interface Dependencies {
   emailValidator: EmailValidator;

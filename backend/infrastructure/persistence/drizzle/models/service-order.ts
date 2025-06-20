@@ -4,7 +4,7 @@ import { timestamp, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
 import { pets } from "./pet";
 import { serviceType } from "./service-type";
-import { veterinarians } from "./veterinarians";
+import { veterinarians } from "./veterinarian";
 
 export const statusEnum = appSchema.enum("status", serviceOrderStatus);
 

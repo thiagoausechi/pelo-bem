@@ -15,7 +15,7 @@ import type { PhoneValidator } from "@server/domain/value-objects/phone";
 import { count, eq } from "drizzle-orm";
 import { db } from "..";
 import { PgVeterinarianMapper } from "../mappers/veterinarian";
-import { veterinarians } from "../models/veterinarians";
+import { veterinarians } from "../models/veterinarian";
 import { parseFilters, parseListOptions } from "./parse-filters";
 
 interface Dependencies {
