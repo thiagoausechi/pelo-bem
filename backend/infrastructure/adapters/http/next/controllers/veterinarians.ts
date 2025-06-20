@@ -1,8 +1,12 @@
 import type { VeterinarianDTO } from "@core/contracts/dtos/veterinarians";
+import { createVeterinarianForm } from "@core/contracts/forms/veterinarian";
 import { HttpStatus } from "@core/http";
 import type { VeterinarianGateway } from "@server/application/gateways";
 import type { FileStorageGateway } from "@server/application/gateways/file-storage";
-import { ListVeterinarianUseCase } from "@server/application/usecases/veterinarian";
+import {
+  CreateVeterinarianUseCase,
+  ListVeterinarianUseCase,
+} from "@server/application/usecases/veterinarian";
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { LicenseValidator } from "@server/domain/value-objects/license";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
@@ -49,8 +53,29 @@ export class NextJsVeterinariansController extends NextJsController {
     });
   }
 
-  async handlePost(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
+  async handlePost(request: NextRequest): Promise<NextResponse> {
+    if (this.parsePath(request).length > 0)
+      return HttpStatus.BAD_REQUEST(
+        "Caminho de requisição inválido para o método POST.",
+      );
+
+    return this.handleRequest(async () => {
+      const parsedFormData = await this.parseRequest(
+        createVeterinarianForm,
+        request,
+      );
+
+      const useCaseResponse = await new CreateVeterinarianUseCase(
+        this.deps,
+      ).execute({
+        ...parsedFormData,
+        license: `${parsedFormData.licenseState} ${parsedFormData.licenseNumber}`,
+      });
+
+      if (!useCaseResponse.ok) throw useCaseResponse.error;
+
+      return HttpStatus.CREATED(useCaseResponse.value);
+    });
   }
 
   async handlePut(_: NextRequest): Promise<NextResponse> {
