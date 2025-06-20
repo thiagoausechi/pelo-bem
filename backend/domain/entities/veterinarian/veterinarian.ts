@@ -7,7 +7,7 @@ import { BaseEntity, type BaseEntityProps } from "../base";
 
 interface VeterinarianProps extends BaseEntityProps {
   fullname: string;
-  licenseNumber: License;
+  license: License;
   email: Email;
   phone: Phone;
 }
@@ -16,7 +16,7 @@ export class Veterinarian extends BaseEntity {
   public static readonly ENTITY_NAME = "veterinário";
 
   public readonly fullname: string;
-  public readonly licenseNumber: License;
+  public readonly license: License;
   public readonly email: Email;
   public readonly phone: Phone;
 
@@ -24,7 +24,7 @@ export class Veterinarian extends BaseEntity {
     super(Veterinarian.ENTITY_NAME, props);
 
     this.fullname = props.fullname;
-    this.licenseNumber = props.licenseNumber;
+    this.license = props.license;
     this.email = props.email;
     this.phone = props.phone;
   }

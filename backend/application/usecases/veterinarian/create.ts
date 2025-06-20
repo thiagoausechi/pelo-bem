@@ -23,7 +23,7 @@ interface Request {
   fullname: string;
   email: string;
   phone: string;
-  licenseNumber: string;
+  license: string;
   profilePicture?: File;
 }
 
@@ -39,11 +39,11 @@ export class CreateVeterinarianUseCase {
       this._request = request;
       const email = this.getEmail();
       const phone = this.getPhone();
-      const licenseNumber = this.getLicenseNumber();
+      const license = this.getLicense();
       const createdVeterinarian = await this.performCreation({
         email,
         phone,
-        licenseNumber,
+        license,
       });
 
       void this.uploadProfilePicture(createdVeterinarian.id);
@@ -76,30 +76,30 @@ export class CreateVeterinarianUseCase {
     return phone.value;
   }
 
-  private getLicenseNumber() {
-    const licenseNumber = License.create({
-      license: this._request.licenseNumber,
+  private getLicense() {
+    const license = License.from({
+      license: this._request.license,
       licenseValidator: this.deps.licenseValidator,
     });
-    if (!licenseNumber.ok) throw licenseNumber.error;
+    if (!license.ok) throw license.error;
 
-    return licenseNumber.value;
+    return license.value;
   }
 
   private async performCreation({
     email,
     phone,
-    licenseNumber,
+    license,
   }: {
     email: Email;
     phone: Phone;
-    licenseNumber: License;
+    license: License;
   }) {
     const veterinarian = Veterinarian.create({
       ...this._request,
       email,
       phone,
-      licenseNumber,
+      license,
     });
     if (!veterinarian.ok) throw veterinarian.error;
 

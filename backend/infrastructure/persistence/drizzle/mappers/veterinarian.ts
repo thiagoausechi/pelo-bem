@@ -25,7 +25,7 @@ export class PgVeterinarianMapper {
       fullname: entity.fullname,
       email: entity.email.get(),
       phone: entity.phone.get(),
-      license: entity.licenseNumber.get(),
+      license: entity.license.get(),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -39,7 +39,7 @@ export class PgVeterinarianMapper {
       fullname: entity.fullname,
       email: entity.email?.get(),
       phone: entity.phone?.get(),
-      license: entity.licenseNumber?.get(),
+      license: entity.license?.get(),
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -58,18 +58,18 @@ export class PgVeterinarianMapper {
     });
     if (!phone.ok) throw phone.error;
 
-    const licenseNumber = License.create({
+    const license = License.from({
       license: model.license,
       licenseValidator: this.deps.licenseValidator,
     });
-    if (!licenseNumber.ok) throw licenseNumber.error;
+    if (!license.ok) throw license.error;
 
     const veterinarian = Veterinarian.create({
       id: model.id,
       fullname: model.fullname,
       email: email.value,
       phone: phone.value,
-      licenseNumber: licenseNumber.value,
+      license: license.value,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
     });

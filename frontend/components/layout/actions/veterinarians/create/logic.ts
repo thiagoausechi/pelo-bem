@@ -7,6 +7,7 @@ import {
   type CreateVeterinarianFormData,
 } from "@core/contracts/forms/veterinarian";
 import { useQueryClient } from "@tanstack/react-query";
+import { brazilianStates } from "./../../../../../../core/contracts/enums/veterinarians/brazilian-states";
 
 const sendCreateVeterinarianRequest = makeMutation<
   CreateVeterinarianFormData,
@@ -17,7 +18,10 @@ const sendCreateVeterinarianRequest = makeMutation<
     formData.append("name", values.fullname);
     formData.append("email", values.email);
     formData.append("phone", values.phone);
-    formData.append("license", values.licenseNumber);
+    formData.append(
+      "license",
+      `${values.licenseState} ${values.licenseNumber}`,
+    );
     if (values.profilePicture)
       formData.append("profilePicture", values.profilePicture);
 
@@ -34,6 +38,7 @@ export function useCreateVeterinarianLogic() {
       fullname: "",
       email: "",
       phone: "",
+      licenseState: brazilianStates[0],
       licenseNumber: "",
       profilePicture: undefined,
     },
