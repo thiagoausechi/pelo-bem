@@ -1,12 +1,18 @@
-import type { TransformToRange } from "@core/range";
+import type { Range } from "@core/range";
 import type { Result } from "@core/result";
 import type { NotFoundError } from "@server/application/errors/not-found";
 import type { UnexpectedError } from "@server/application/errors/unexpected";
 import type { EntryAlreadyExistsError } from "./entry-already-exists";
 
-export type FiltersFor<TEntity extends object> = Partial<
-  TransformToRange<TEntity>
->;
+export type FiltersFor<TEntity extends object> = {
+  readonly [K in keyof TEntity]?: TEntity[K] extends number | Date | undefined
+    ? Range<TEntity[K]>
+    : TEntity[K] extends string | boolean
+      ? TEntity[K]
+      : TEntity[K] extends object
+        ? string
+        : never;
+};
 
 /**
  * Representa um registro de uma entidade no sistema.
