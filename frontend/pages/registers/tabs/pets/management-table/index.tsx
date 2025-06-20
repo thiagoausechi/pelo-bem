@@ -22,7 +22,7 @@ export function PetsManagementTable() {
       actions={[<CreatePetAction key="new-pet" />]}
       search={{
         columnId: "name",
-        placeholder: "Buscar por nome do cuidador",
+        placeholder: "Buscar por nome do pet",
       }}
       loadingMessage={(isLoading || isFetching) && "Carregando..."}
       errorMessage={isError && "Erro ao carregar dados."}
