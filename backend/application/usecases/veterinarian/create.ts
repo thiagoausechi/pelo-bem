@@ -1,5 +1,6 @@
 import { err, ok, type Result } from "@core/result";
 import type { VeterinarianGateway } from "@server/application/gateways";
+import { EntryAlreadyExistsError } from "@server/application/gateways/base/entry-already-exists";
 import type { Entry } from "@server/application/gateways/base/gateway";
 import type { FileStorageGateway } from "@server/application/gateways/file-storage";
 import { Veterinarian } from "@server/domain/entities/veterinarian";
@@ -40,6 +41,9 @@ export class CreateVeterinarianUseCase {
       const email = this.getEmail();
       const phone = this.getPhone();
       const license = this.getLicense();
+
+      await this.checkUniqueLicense(license);
+
       const createdVeterinarian = await this.performCreation({
         email,
         phone,
@@ -54,6 +58,13 @@ export class CreateVeterinarianUseCase {
         new CreationFailedError(Veterinarian.ENTITY_NAME, error as Error),
       );
     }
+  }
+
+  private async checkUniqueLicense(license: License) {
+    if (await this.deps.veterinarianGateway.findBy({ license }))
+      throw new EntryAlreadyExistsError(
+        "Já existe um veterinário com essa licença.",
+      );
   }
 
   private getEmail() {
