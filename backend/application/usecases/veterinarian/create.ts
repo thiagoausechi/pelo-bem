@@ -61,7 +61,10 @@ export class CreateVeterinarianUseCase {
   }
 
   private async checkUniqueLicense(license: License) {
-    if (await this.deps.veterinarianGateway.findBy({ license }))
+    const foundLicense = await this.deps.veterinarianGateway.findBy({
+      license: license.get(),
+    });
+    if (foundLicense.ok)
       throw new EntryAlreadyExistsError(
         "Já existe um veterinário com essa licença.",
       );
