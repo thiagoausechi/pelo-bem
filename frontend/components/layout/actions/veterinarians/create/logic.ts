@@ -2,12 +2,12 @@ import { useAvatarPreview } from "@client/hooks/avatar-preview";
 import { useForm } from "@client/hooks/form";
 import { makeMutation } from "@client/services/query";
 import type { VeterinarianDTO } from "@core/contracts/dtos/veterinarians";
+import { brazilianStates } from "@core/contracts/enums/veterinarians/brazilian-states";
 import {
   createVeterinarianForm,
   type CreateVeterinarianFormData,
 } from "@core/contracts/forms/veterinarian";
 import { useQueryClient } from "@tanstack/react-query";
-import { brazilianStates } from "./../../../../../../core/contracts/enums/veterinarians/brazilian-states";
 
 const sendCreateVeterinarianRequest = makeMutation<
   CreateVeterinarianFormData,
