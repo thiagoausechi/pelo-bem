@@ -7,6 +7,7 @@ import { env } from "./configs/env";
 import {
   PgOwnerGateway,
   PgPetGateway,
+  PgServiceOrderGateway,
   PgVeterinarianGateway,
 } from "./persistence/drizzle/gateways";
 import { s3 } from "./persistence/s3";
@@ -42,6 +43,10 @@ export const Gateways = {
   veterinarianGateway: getOrCreate(
     "veterinarianGateway",
     () => new PgVeterinarianGateway(Validators),
+  ),
+  serviceOrderGateway: getOrCreate(
+    "serviceOrderGateway",
+    () => new PgServiceOrderGateway(),
   ),
   fileStorage: getOrCreate(
     "fileStorage",
