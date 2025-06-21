@@ -1,6 +1,27 @@
 import { cn } from "@client/lib/utils";
+import type React from "react";
 
-function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
+interface SkeletonProps<T> {
+  isLoading: boolean;
+  data: T | null | undefined;
+  placeholder: React.ReactNode;
+  children: (data: T) => React.ReactNode;
+}
+
+function Skeleton<T>({
+  isLoading,
+  data,
+  placeholder,
+  children,
+}: SkeletonProps<T>) {
+  if (isLoading) return placeholder;
+
+  if (data) return children(data);
+
+  return null;
+}
+
+function Placeholder({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="skeleton"
@@ -10,4 +31,4 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export { Skeleton };
+export { Placeholder, Skeleton };
