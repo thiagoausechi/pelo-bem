@@ -15,7 +15,7 @@ const avatarVariants = cva(
       size: {
         default: "size-8",
         md: "size-14",
-        lg: "size-28",
+        lg: "size-44",
       },
     },
     defaultVariants: {
@@ -24,6 +24,29 @@ const avatarVariants = cva(
   },
 );
 
+const sizeInPixels: Record<
+  Exclude<Required<VariantProps<typeof avatarVariants>>["size"], null>,
+  number
+> = {
+  default: 32,
+  md: 58,
+  lg: 176,
+};
+
+type AvatarContextValue = VariantProps<typeof avatarVariants>;
+
+const AvatarContext = React.createContext<AvatarContextValue | null>(null);
+
+export function useAvatarContext() {
+  const context = React.useContext(AvatarContext);
+  if (!context) {
+    throw new Error(
+      "useAvatarContext deve ser utilizado dentro de <Avatar />.",
+    );
+  }
+  return context;
+}
+
 function Avatar({
   className,
   size,
@@ -31,15 +54,24 @@ function Avatar({
 }: React.ComponentProps<typeof AvatarPrimitive.Root> &
   VariantProps<typeof avatarVariants>) {
   return (
-    <AvatarPrimitive.Root
-      data-slot="avatar"
-      className={cn(avatarVariants({ size, className }))}
-      {...props}
-    />
+    <AvatarContext.Provider
+      value={{
+        size,
+      }}
+    >
+      <AvatarPrimitive.Root
+        data-slot="avatar"
+        className={cn(avatarVariants({ size, className }))}
+        {...props}
+      />
+    </AvatarContext.Provider>
   );
 }
 
 function AvatarImage({ className, src, alt, ...props }: ImageProps) {
+  const { size } = useAvatarContext();
+  const imageSize = size ? sizeInPixels[size] : sizeInPixels.default;
+
   const srcAsString =
     typeof src === "string" ? src : "src" in src ? src.src : src.default.src;
 
@@ -49,8 +81,8 @@ function AvatarImage({ className, src, alt, ...props }: ImageProps) {
         data-slot="avatar-image"
         className={cn("aspect-square size-full", className)}
         src={src}
-        width={64}
-        height={64}
+        width={imageSize}
+        height={imageSize}
         alt={alt}
         {...props}
       />
