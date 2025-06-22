@@ -26,6 +26,7 @@ import {
 } from "@client/components/ui/popover";
 import { SelectorField } from "@client/components/ui/selector-field";
 import { cn } from "@client/lib/utils";
+import { acronym } from "@core/acronym";
 import { capitalize } from "@core/capitalize";
 import { AVATAR_INPUT_ACCEPT } from "@core/contracts/avatar-picutre";
 import { genders, species } from "@core/contracts/enums/pets";
@@ -76,7 +77,9 @@ export function CreatePetForm() {
                                 alt={`Pré-visualização do retrato do ${name}`}
                               />
                             )}
-                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback>
+                              {acronym(name, { maxWords: 2 })}
+                            </AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col gap-0.5">
                             <p className="text-sm leading-none font-medium">
@@ -105,7 +108,9 @@ export function CreatePetForm() {
                                 alt={`Avatar do cuidador ${name}`}
                               />
                             )}
-                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback>
+                              {acronym(name, { maxWords: 2 })}
+                            </AvatarFallback>
                           </Avatar>
                           <div className="flex flex-col gap-0.5">
                             <p className="text-sm leading-none font-medium">

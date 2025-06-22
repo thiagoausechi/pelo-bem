@@ -10,6 +10,7 @@ import {
   DataTableColumnHeader,
   type Column,
 } from "@client/components/ui/data-table";
+import { acronym } from "@core/acronym";
 import type { VeterinarianDTO } from "@core/contracts/dtos/veterinarians";
 
 export const columns: Column<VeterinarianDTO>[] = [
@@ -55,7 +56,9 @@ export const columns: Column<VeterinarianDTO>[] = [
               alt={`Avatar do veterinário ${row.original.name}`}
             />
           )}
-          <AvatarFallback>{row.original.name.charAt(0)}</AvatarFallback>
+          <AvatarFallback>
+            {acronym(row.original.name, { maxWords: 2 })}
+          </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-0.5">
           <p className="text-sm leading-none font-medium">

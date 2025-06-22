@@ -10,6 +10,7 @@ import {
   DataTableColumnHeader,
   type Column,
 } from "@client/components/ui/data-table";
+import { acronym } from "@core/acronym";
 import { capitalize } from "@core/capitalize";
 import type { PetDTO } from "@core/contracts/dtos/pets";
 import { GendersInfo } from "@core/contracts/enums/pets/genders.info";
@@ -89,7 +90,9 @@ export const columns: Column<PetDTO>[] = [
               alt={`Avatar do cuidador ${row.original.owner.name}`}
             />
           )}
-          <AvatarFallback>{row.original.owner.name.charAt(0)}</AvatarFallback>
+          <AvatarFallback>
+            {acronym(row.original.owner.name, { maxWords: 2 })}
+          </AvatarFallback>
         </Avatar>
         <p className="text-sm leading-none font-medium">
           {row.original.owner.name}
