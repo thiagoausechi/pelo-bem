@@ -1,5 +1,6 @@
 import { AppointmentsTodayCard } from "./appointments-today";
 import { CanceledAppointmentsCard } from "./canceled-appointments";
+import { RatingsCard } from "./ratings";
 import { RevenueCard } from "./revenue-card";
 
 export function StatsCardSection() {
@@ -8,7 +9,7 @@ export function StatsCardSection() {
       <RevenueCard />
       <AppointmentsTodayCard />
       <CanceledAppointmentsCard />
-      {/* <RatingsCard /> */}
+      <RatingsCard />
     </section>
   );
 }
