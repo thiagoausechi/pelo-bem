@@ -13,4 +13,6 @@ export interface PetDTO {
   weightKg: number;
   heightCm: number;
   gender: Gender;
+  createdAt: Date;
+  updatedAt: Date;
 }
