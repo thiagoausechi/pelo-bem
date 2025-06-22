@@ -10,8 +10,8 @@ import {
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { LicenseValidator } from "@server/domain/value-objects/license";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
-import { env } from "@server/infrastructure/configs/env";
 import type { NextRequest, NextResponse } from "next/server";
+import { mapVeterinarianToDTO } from "../mappers/veterinarian";
 import { NextJsController } from "./base";
 
 interface Dependencies {
@@ -37,16 +37,7 @@ export class NextJsVeterinariansController extends NextJsController {
       ).execute({ filters: id ? { id } : undefined });
 
       const result: VeterinarianDTO[] = useCaseResponse.map(
-        ({ veterinarian }) => ({
-          id: veterinarian.id,
-          name: veterinarian.fullname,
-          email: veterinarian.email.get(),
-          phone: veterinarian.phone.get(),
-          license: veterinarian.license.get(),
-          profile: `${env.S3_PUBLIC_URL}/veterinarians/${veterinarian.id}.png`,
-          createdAt: veterinarian.createdAt,
-          updatedAt: veterinarian.updatedAt,
-        }),
+        ({ veterinarian }) => mapVeterinarianToDTO(veterinarian),
       );
 
       const response = id ? result[0] : result;
