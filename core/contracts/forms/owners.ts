@@ -9,3 +9,9 @@ export const createOwnerForm = z.object({
 });
 
 export type CreateOwnerFormData = z.infer<typeof createOwnerForm>;
+
+export const updateOwnerForm = createOwnerForm.partial().extend({
+  id: z.string().min(1, "ID é obrigatório."),
+});
+
+export type UpdateOwnerFormData = z.infer<typeof updateOwnerForm>;
