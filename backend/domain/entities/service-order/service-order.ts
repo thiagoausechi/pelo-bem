@@ -4,12 +4,12 @@ import { EmptyPropertyError } from "@server/domain/errors";
 import { BaseEntity, type BaseEntityProps } from "../base";
 import { Pet } from "../pet";
 import { Veterinarian } from "../veterinarian";
-import type { ServiceType } from "./service-type";
+import { ServiceType } from "./service-type";
 
 interface ServiceOrderProps extends BaseEntityProps {
   petId: string;
   veterinarianId: string;
-  serviceType: ServiceType;
+  serviceTypeId: string;
   appointmentDate: Date;
   status: ServiceOrderStatus;
 }
@@ -19,7 +19,7 @@ export class ServiceOrder extends BaseEntity {
 
   public readonly petId: string;
   public readonly veterinarianId: string;
-  public readonly serviceType: ServiceType;
+  public readonly serviceTypeId: string;
   public readonly appointmentDate: Date;
   public readonly status: ServiceOrderStatus;
 
@@ -28,7 +28,7 @@ export class ServiceOrder extends BaseEntity {
 
     this.petId = props.petId;
     this.veterinarianId = props.veterinarianId;
-    this.serviceType = props.serviceType;
+    this.serviceTypeId = props.serviceTypeId;
     this.appointmentDate = props.appointmentDate;
     this.status = props.status;
   }
@@ -36,7 +36,15 @@ export class ServiceOrder extends BaseEntity {
   public static create(
     props: ServiceOrderProps,
   ): Result<ServiceOrder, EmptyPropertyError> {
-    const { petId, veterinarianId } = props;
+    const { serviceTypeId, petId, veterinarianId } = props;
+
+    if (serviceTypeId.length === 0)
+      return err(
+        new EmptyPropertyError(
+          "ID do " + ServiceType.ENTITY_NAME,
+          ServiceOrder.ENTITY_NAME,
+        ),
+      );
 
     if (petId.length === 0)
       return err(

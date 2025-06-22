@@ -4,19 +4,21 @@ import { NotFoundError } from "@server/application/errors/not-found";
 import type {
   PetGateway,
   ServiceOrderGateway,
+  ServiceTypeGateway,
 } from "@server/application/gateways";
 import type { Entry } from "@server/application/gateways/base/gateway";
 import { type VeterinarianGateway } from "@server/application/gateways/veterinarian";
 import { Pet } from "@server/domain/entities/pet";
 import {
   ServiceOrder,
-  type ServiceType,
+  ServiceType,
 } from "@server/domain/entities/service-order";
 import { Veterinarian } from "@server/domain/entities/veterinarian";
 import { CreationFailedError } from "../errors/creation-failed";
 
 interface Dependencies {
   serviceOrderGateway: ServiceOrderGateway;
+  serviceTypeGateway: ServiceTypeGateway;
   petGateway: PetGateway;
   veterinarianGateway: VeterinarianGateway;
 }
@@ -24,7 +26,7 @@ interface Dependencies {
 interface Request {
   petId: string;
   veterinarianId: string;
-  serviceType: ServiceType;
+  serviceTypeId: string;
   appointmentDate: Date;
   status: ServiceOrderStatus;
 }
@@ -40,6 +42,7 @@ export class CreateServiceOrderUseCase {
     try {
       this._request = request;
 
+      await this.checkServiceTypeExists();
       await this.checkPetExists();
       await this.checkVeterinarianExists();
       const createdServiceOrder = await this.performCreation();
@@ -50,6 +53,15 @@ export class CreateServiceOrderUseCase {
         new CreationFailedError(ServiceOrder.ENTITY_NAME, error as Error),
       );
     }
+  }
+
+  private async checkServiceTypeExists() {
+    if (
+      !(await this.deps.serviceTypeGateway.existsBy({
+        id: this._request.serviceTypeId,
+      }))
+    )
+      throw new NotFoundError(ServiceType.ENTITY_NAME);
   }
 
   private async checkPetExists() {
