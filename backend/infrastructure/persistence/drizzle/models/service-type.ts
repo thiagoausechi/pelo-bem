@@ -1,7 +1,7 @@
 import { real, text } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
 
-export const serviceType = appSchema.table("service_type", {
+export const serviceTypes = appSchema.table("service_types", {
   ...baseSchema,
 
   name: text("name").notNull().unique(),
@@ -9,6 +9,6 @@ export const serviceType = appSchema.table("service_type", {
   price: real("price").notNull(),
 });
 
-export type PgServiceTypeModel = typeof serviceType.$inferSelect;
+export type PgServiceTypeModel = typeof serviceTypes.$inferSelect;
 
-export type PgServiceTypeInsertModel = typeof serviceType.$inferInsert;
+export type PgServiceTypeInsertModel = typeof serviceTypes.$inferInsert;
