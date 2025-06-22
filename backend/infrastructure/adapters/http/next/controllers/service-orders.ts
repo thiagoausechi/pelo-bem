@@ -2,6 +2,7 @@ import { HttpStatus } from "@core/http";
 import type {
   PetGateway,
   ServiceOrderGateway,
+  ServiceTypeGateway,
   VeterinarianGateway,
 } from "@server/application/gateways";
 import type { NextRequest, NextResponse } from "next/server";
@@ -9,6 +10,7 @@ import { NextJsController } from "./base";
 
 interface Dependecies {
   serviceOrderGateway: ServiceOrderGateway;
+  serviceTypeGateway: ServiceTypeGateway;
   petGateway: PetGateway;
   veterinarianGateway: VeterinarianGateway;
 }
