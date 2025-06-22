@@ -6,6 +6,7 @@ import type {
   ServiceOrderGateway,
 } from "@server/application/gateways";
 import type { Entry } from "@server/application/gateways/base/gateway";
+import { type VeterinarianGateway } from "@server/application/gateways/veterinarian";
 import { Pet } from "@server/domain/entities/pet";
 import {
   ServiceOrder,
@@ -13,7 +14,6 @@ import {
 } from "@server/domain/entities/service-order";
 import { Veterinarian } from "@server/domain/entities/veterinarian";
 import { CreationFailedError } from "../errors/creation-failed";
-import { type VeterinarianGateway } from "./../../gateways/veterinarian";
 
 interface Dependencies {
   serviceOrderGateway: ServiceOrderGateway;
