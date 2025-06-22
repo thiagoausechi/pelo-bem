@@ -77,7 +77,7 @@ const PAGINATION_PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50] as const;
 
 interface DataTableUserInteractions<TData> {
   actions?: React.ReactNode;
-  search: {
+  search?: {
     columnId: keyof TData;
     placeholder?: string;
   };
@@ -238,20 +238,22 @@ function DataTableToolbar<TData>({
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center gap-2">
-        <Input
-          placeholder={search.placeholder ?? "Buscar..."}
-          value={
-            (table
-              .getColumn(search.columnId as string)
-              ?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table
-              .getColumn(search.columnId as string)
-              ?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
+        {search && (
+          <Input
+            placeholder={search.placeholder ?? "Buscar..."}
+            value={
+              (table
+                .getColumn(search.columnId as string)
+                ?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table
+                .getColumn(search.columnId as string)
+                ?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-[150px] lg:w-[250px]"
+          />
+        )}
         {filters?.map(
           (filter, index) =>
             filter.column && (
