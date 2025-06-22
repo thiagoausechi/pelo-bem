@@ -3,7 +3,7 @@ import { relations } from "drizzle-orm";
 import { timestamp, uuid } from "drizzle-orm/pg-core";
 import { appSchema, baseSchema } from "./base";
 import { pets } from "./pet";
-import { serviceType } from "./service-type";
+import { serviceTypes } from "./service-type";
 import { veterinarians } from "./veterinarian";
 
 export const statusEnum = appSchema.enum("status", serviceOrderStatus);
@@ -24,7 +24,7 @@ export const serviceOrders = appSchema.table("service_orders", {
     })
     .notNull(),
   serviceTypeId: uuid("service_type_id")
-    .references(() => serviceType.id, {
+    .references(() => serviceTypes.id, {
       onDelete: "cascade",
       onUpdate: "cascade",
     })
@@ -44,9 +44,9 @@ export const serviceOrdersRelations = relations(serviceOrders, ({ one }) => ({
     fields: [serviceOrders.veterinarianId],
     references: [veterinarians.id],
   }),
-  serviceType: one(serviceType, {
+  serviceType: one(serviceTypes, {
     fields: [serviceOrders.serviceTypeId],
-    references: [serviceType.id],
+    references: [serviceTypes.id],
   }),
 }));
 
