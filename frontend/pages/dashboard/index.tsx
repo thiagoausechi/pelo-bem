@@ -1,4 +1,4 @@
-import { StatsCardSection } from "./sections";
+import { StatsCardSection, UpcomingServicesSection } from "./sections";
 
 export function DashboardPage() {
   return (
@@ -7,7 +7,7 @@ export function DashboardPage() {
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
           <StatsCardSection />
 
-          {/* <UpcomingServicesSection /> */}
+          <UpcomingServicesSection />
 
           {/* <ServicesDoneSection /> */}
         </div>
