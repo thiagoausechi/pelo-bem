@@ -9,11 +9,11 @@ import type {
   ListOptions,
 } from "@server/application/gateways/base/gateway";
 import { ServiceOrder } from "@server/domain/entities/service-order";
+import { db } from "@server/infrastructure/persistence/drizzle";
+import { PgServiceOrderMapper } from "@server/infrastructure/persistence/drizzle/mappers/service-order";
+import { serviceOrders } from "@server/infrastructure/persistence/drizzle/models/service-order";
 import { count, eq } from "drizzle-orm";
-import { db } from "..";
-import { PgServiceOrderMapper } from "../mappers/service-order";
-import { serviceOrders } from "../models/service-order";
-import { parseFilters, parseListOptions } from "./parse-filters";
+import { parseFilters, parseListOptions } from "../parse-filters";
 
 export class PgServiceOrderGateway implements ServiceOrderGateway {
   private mapper: PgServiceOrderMapper;
