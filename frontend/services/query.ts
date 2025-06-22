@@ -18,12 +18,13 @@ export function makeQuery<TResponseData>(
 export function makeMutation<TRequestData, TResponseData>(
   url: string,
   options: {
+    method?: "POST" | "PUT" | "DELETE";
     valuesToFormData: (values: TRequestData) => FormData;
   },
 ): (values: TRequestData) => Promise<TResponseData> {
   return async (values: TRequestData) => {
     const response = await fetch(`/api${url}`, {
-      method: "POST",
+      method: options.method ?? "POST",
       body: options.valuesToFormData(values),
     });
 
