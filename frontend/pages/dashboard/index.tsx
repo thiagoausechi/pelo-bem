@@ -1,4 +1,8 @@
-import { StatsCardSection, UpcomingServicesSection } from "./sections";
+import {
+  ServicesDoneSection,
+  StatsCardSection,
+  UpcomingServicesSection,
+} from "./sections";
 
 export function DashboardPage() {
   return (
@@ -9,7 +13,7 @@ export function DashboardPage() {
 
           <UpcomingServicesSection />
 
-          {/* <ServicesDoneSection /> */}
+          <ServicesDoneSection />
         </div>
       </div>
     </div>
