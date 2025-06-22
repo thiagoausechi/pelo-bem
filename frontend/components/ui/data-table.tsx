@@ -76,6 +76,7 @@ import {
 const PAGINATION_PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50] as const;
 
 interface DataTableUserInteractions<TData> {
+  title?: React.ReactNode;
   actions?: React.ReactNode;
   search?: {
     columnId: keyof TData;
@@ -97,6 +98,7 @@ interface DataTableProps<TData, TValue>
 }
 
 function DataTable<TData, TValue>({
+  title,
   columns,
   data,
   actions,
@@ -197,6 +199,7 @@ function DataTable<TData, TValue>({
   return (
     <div className="flex flex-col gap-4">
       <DataTableToolbar
+        title={title}
         table={table}
         actions={actions}
         search={search}
@@ -227,6 +230,7 @@ interface DataTableToolbarProps<TData>
 }
 
 function DataTableToolbar<TData>({
+  title,
   table,
   actions,
   search,
@@ -238,6 +242,7 @@ function DataTableToolbar<TData>({
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center gap-2">
+        {title}
         {search && (
           <Input
             placeholder={search.placeholder ?? "Buscar..."}
