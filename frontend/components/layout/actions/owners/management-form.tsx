@@ -18,10 +18,31 @@ import {
 } from "@client/components/ui/form";
 import { Input } from "@client/components/ui/input";
 import { AVATAR_INPUT_ACCEPT } from "@core/contracts/avatar-picutre";
-import { useCreateOwnerLogic } from "./logic";
+import type { OwnerDTO } from "@core/contracts/dtos/owners";
+import type { CreateOwnerFormData } from "@core/contracts/forms/owners";
+import type {
+  UseMutateAsyncFunction,
+  UseMutateFunction,
+} from "@tanstack/react-query";
+import type { UseFormReturn } from "react-hook-form";
 
-export function CreateOwnerForm() {
-  const { form, submit, isPending, previewUrl } = useCreateOwnerLogic();
+interface Props<TFormSchema extends CreateOwnerFormData = CreateOwnerFormData> {
+  sendButtonLabel: string;
+  loadedData?: OwnerDTO;
+  useLogic: (loadedData: OwnerDTO | undefined) => {
+    previewUrl: string | undefined;
+    form: UseFormReturn<TFormSchema, unknown, TFormSchema>;
+    submit: UseMutateFunction<OwnerDTO, Error, TFormSchema, unknown>;
+    submitAsync: UseMutateAsyncFunction<OwnerDTO, Error, TFormSchema, unknown>;
+    data: OwnerDTO | undefined;
+    isPending: boolean;
+    resetForm: () => void;
+  };
+}
+
+export function ManagementOwnerForm(props: Props) {
+  const { loadedData, useLogic, sendButtonLabel } = props;
+  const { form, submit, isPending, previewUrl } = useLogic(loadedData);
 
   return (
     <Form {...form}>
@@ -125,7 +146,7 @@ export function CreateOwnerForm() {
 
         <DrawerFooter>
           <Button disabled={isPending} type="submit" className="w-full">
-            {isPending ? "Aguarde" : "Adicionar"}
+            {isPending ? "Aguarde" : sendButtonLabel}
           </Button>
           <DrawerClose asChild>
             <Button variant="outline" className="w-full" type="button">
