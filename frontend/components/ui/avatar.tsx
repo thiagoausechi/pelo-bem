@@ -93,7 +93,7 @@ function AvatarImage({ className, src, alt, ...props }: ImageProps) {
 function AvatarFallback({
   className,
   children = (
-    <UserRound className="text-muted-foreground size-full p-1.5 @min-[50px]/avatar:p-2.5 @min-[110px]/avatar:p-4" />
+    <UserRound className="size-full p-1.5 @min-[50px]/avatar:p-2.5 @min-[110px]/avatar:p-4" />
   ),
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
@@ -101,7 +101,7 @@ function AvatarFallback({
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        "bg-input/30 flex size-full items-center justify-center rounded-full",
+        "bg-input/30 text-muted-foreground flex size-full items-center justify-center rounded-full",
         className,
       )}
       {...props}
