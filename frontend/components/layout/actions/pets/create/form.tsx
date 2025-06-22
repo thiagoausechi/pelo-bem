@@ -194,13 +194,13 @@ export function CreatePetForm() {
                             ...SpeciesInfo[id],
                           }))}
                           getOptionValue={({ id }) => id}
-                          renderOption={({ label, icon }) => (
+                          renderOption={({ label, ...specie }) => (
                             <div className="flex flex-1 justify-between">
                               <div className="font-medium">
                                 {capitalize(label)}
                               </div>
                               <div className="text-muted-foreground">
-                                {icon}
+                                <specie.icon className="size-4" />
                               </div>
                             </div>
                           )}

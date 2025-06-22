@@ -4,7 +4,7 @@ export type Specie = (typeof species)[number];
 
 export interface SpecieInfo {
   label: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   weightKg: { min: number; max: number };
   heightCm: { min: number; max: number };
 }

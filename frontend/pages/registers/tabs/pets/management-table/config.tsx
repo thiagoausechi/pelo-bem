@@ -14,6 +14,7 @@ import { capitalize } from "@core/capitalize";
 import type { PetDTO } from "@core/contracts/dtos/pets";
 import { GendersInfo } from "@core/contracts/enums/pets/genders.info";
 import { SpeciesInfo } from "@core/contracts/enums/pets/species.info";
+import React from "react";
 
 export const columns: Column<PetDTO>[] = [
   {
@@ -59,7 +60,9 @@ export const columns: Column<PetDTO>[] = [
             />
           )}
           <AvatarFallback>
-            {SpeciesInfo[row.original.specie].icon}
+            {React.createElement(SpeciesInfo[row.original.specie].icon, {
+              className: "size-4",
+            })}
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-0.5">
