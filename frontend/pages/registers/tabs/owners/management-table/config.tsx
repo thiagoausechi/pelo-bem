@@ -1,16 +1,19 @@
 "use client";
 
+import { UpdateOwnerAction } from "@client/components/layout/actions/owners/update";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@client/components/ui/avatar";
+import { Button } from "@client/components/ui/button";
 import { Checkbox } from "@client/components/ui/checkbox";
 import {
   DataTableColumnHeader,
   type Column,
 } from "@client/components/ui/data-table";
 import type { OwnerDTO } from "@core/contracts/dtos/owners";
+import { SquarePen } from "lucide-react";
 
 export const columns: Column<OwnerDTO>[] = [
   {
@@ -93,5 +96,25 @@ export const columns: Column<OwnerDTO>[] = [
         </span>
       </div>
     ),
+  },
+  {
+    id: "actions",
+    title: "Ações",
+    enableHiding: false,
+    enableSorting: false,
+    cell: ({ row }) => {
+      const owner = row.original;
+
+      return (
+        <div className="flex items-center justify-center">
+          <UpdateOwnerAction loadedOwnerData={owner}>
+            <Button variant="ghost" className="size-8 p-0">
+              <span className="sr-only">Editar cuidador {owner.name}</span>
+              <SquarePen />
+            </Button>
+          </UpdateOwnerAction>
+        </div>
+      );
+    },
   },
 ];
