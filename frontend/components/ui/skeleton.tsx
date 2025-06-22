@@ -2,23 +2,15 @@ import { cn } from "@client/lib/utils";
 import type React from "react";
 
 interface SkeletonProps<T> {
-  isLoading: boolean;
   data: T | null | undefined;
   placeholder: React.ReactNode;
   children: (data: T) => React.ReactNode;
 }
 
-function Skeleton<T>({
-  isLoading,
-  data,
-  placeholder,
-  children,
-}: SkeletonProps<T>) {
-  if (isLoading) return placeholder;
+function Skeleton<T>({ data, placeholder, children }: SkeletonProps<T>) {
+  if (data === null || data === undefined) return placeholder;
 
-  if (data) return children(data);
-
-  return null;
+  return children(data);
 }
 
 function Placeholder({ className, ...props }: React.ComponentProps<"div">) {
