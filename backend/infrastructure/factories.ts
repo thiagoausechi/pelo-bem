@@ -9,6 +9,7 @@ import {
   PgOwnerGateway,
   PgPetGateway,
   PgServiceOrderGateway,
+  PgServiceTypeGateway,
   PgVeterinarianGateway,
 } from "./persistence/drizzle/gateways";
 import { s3 } from "./persistence/s3";
@@ -48,6 +49,10 @@ export const Gateways = {
   serviceOrderGateway: getOrCreate(
     "serviceOrderGateway",
     () => new PgServiceOrderGateway(),
+  ),
+  serviceTypeGateway: getOrCreate(
+    "serviceTypeGateway",
+    () => new PgServiceTypeGateway(),
   ),
   fileStorage: getOrCreate(
     "fileStorage",
