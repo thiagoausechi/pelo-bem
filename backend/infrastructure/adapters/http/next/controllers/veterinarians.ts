@@ -49,7 +49,9 @@ export class NextJsVeterinariansController extends NextJsController {
         }),
       );
 
-      return HttpStatus.OK(result);
+      const response = id ? result[0] : result;
+
+      return HttpStatus.OK(response);
     });
   }
 
