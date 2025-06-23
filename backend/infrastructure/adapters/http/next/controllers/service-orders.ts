@@ -1,5 +1,8 @@
 import type { ServiceOrderDTO } from "@core/contracts/dtos/service-orders";
-import { createServiceOrderForm } from "@core/contracts/forms/service-order";
+import {
+  createServiceOrderForm,
+  createServiceTypeForm,
+} from "@core/contracts/forms/service-order";
 import { HttpStatus } from "@core/http";
 import type {
   OwnerGateway,
@@ -10,6 +13,7 @@ import type {
 } from "@server/application/gateways";
 import {
   CreateServiceOrderUseCase,
+  CreateServiceTypeUseCase,
   ListServiceOrdersUserCase,
 } from "@server/application/usecases/service-order";
 import type { NextRequest, NextResponse } from "next/server";
@@ -83,8 +87,26 @@ export class NextJsServiceOrdersController extends NextJsController {
     return HttpStatus.NOT_IMPLEMENTED();
   }
 
-  async handlePostServiceType(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
+  async handlePostServiceType(request: NextRequest): Promise<NextResponse> {
+    if (this.parsePath(request).length > 0)
+      return HttpStatus.BAD_REQUEST(
+        "Caminho de requisição inválido para o método POST.",
+      );
+
+    return this.handleRequest(async () => {
+      const parsedFormData = await this.parseRequest(
+        createServiceTypeForm,
+        request,
+      );
+
+      const useCaseResponse = await new CreateServiceTypeUseCase(
+        this.deps,
+      ).execute(parsedFormData);
+
+      if (!useCaseResponse.ok) throw useCaseResponse.error;
+
+      return HttpStatus.CREATED(useCaseResponse.value);
+    });
   }
 
   async handlePutServiceType(_: NextRequest): Promise<NextResponse> {
