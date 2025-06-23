@@ -5,7 +5,6 @@ import type {
   ListOptions,
 } from "@server/application/gateways/base/gateway";
 import type { Owner } from "@server/domain/entities/owner";
-import type { Pet } from "@server/domain/entities/pet";
 
 interface Dependencies {
   ownerGateway: OwnerGateway;
@@ -19,7 +18,6 @@ interface Request {
 
 interface Response {
   owner: Entry<Owner>;
-  pets: Entry<Pet>[];
 }
 
 export class ListOwnersUseCase {
@@ -31,15 +29,6 @@ export class ListOwnersUseCase {
       request.options,
     );
 
-    const pets = await Promise.all(
-      owners.map((owner) =>
-        this.deps.petGateway.listAll({ ownerId: owner.id }),
-      ),
-    );
-
-    return owners.map((owner, index) => ({
-      owner,
-      pets: pets[index] ?? [],
-    }));
+    return owners.map((owner) => ({ owner }));
   }
 }
