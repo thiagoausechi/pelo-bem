@@ -9,6 +9,7 @@ import {
   eq,
   gte,
   ilike,
+  isNull,
   lte,
   or,
   type Column,
@@ -29,7 +30,11 @@ export function parseFilters<TEntity extends object>(params: {
   const conditions: (SQL | undefined)[] = [];
 
   Object.entries(filters).forEach(([key, value]) => {
+    if (value === undefined) return;
+
     const column = table[key] as Column;
+
+    if (value === null) return conditions.push(isNull(column));
 
     if (typeof value === "number") return conditions.push(eq(column, value));
 
