@@ -20,11 +20,21 @@ export const baseSchema = {
  * Mapeia o tipo NUMERIC do PostgreSQL para o tipo `number` do TypeScript.
  * O Drizzle, por padrão, o trata como `string` para evitar perda de precisão.
  * Este custom type faz a conversão segura assumindo que o valor cabe em um `number`.
- * * @param name - O nome da coluna no banco de dados.
+ * @param name - O nome da coluna no banco de dados.
  */
-export const numericToNumber = (name: string) =>
+export const numericToNumber = (
+  name: string,
+  options?: { precision?: number; scale?: number },
+) =>
   customType<{ data: number; driverData: string }>({
-    dataType: () => "numeric",
+    dataType: () => {
+      if (options?.precision && options?.scale)
+        return `numeric(${options.precision}, ${options.scale})`;
+
+      if (options?.precision) return `numeric(${options.precision})`;
+
+      return "numeric";
+    },
     fromDriver: (value: string): number => parseFloat(value),
     toDriver: (value: number): string => value.toString(),
   })(name);
