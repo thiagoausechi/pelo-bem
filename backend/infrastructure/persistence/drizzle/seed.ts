@@ -153,11 +153,14 @@ export class Seeder {
           specie,
           breed,
           birthday: faker.date.birthdate({ min: 1, max: 15, mode: "age" }),
-          weightGrams:
-            faker.number.int({
-              min: SpeciesInfo[specie].weightKg.min,
-              max: SpeciesInfo[specie].weightKg.max,
-            }) * 1000, // Convertendo para gramas
+          weightKg: parseFloat(
+            faker.number
+              .float({
+                min: SpeciesInfo[specie].weightKg.min,
+                max: SpeciesInfo[specie].weightKg.max,
+              })
+              .toFixed(3),
+          ),
           heightCm: faker.number.int({
             min: SpeciesInfo[specie].heightCm.min,
             max: SpeciesInfo[specie].heightCm.max,
