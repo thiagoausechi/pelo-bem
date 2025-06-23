@@ -1,5 +1,5 @@
+import { LoginForm } from "@client/components/layout/actions/auth/login";
 import NextImage from "next/image";
-import { LoginForm } from "./form";
 
 export function LoginPage() {
   return (
