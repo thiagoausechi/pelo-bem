@@ -12,10 +12,10 @@ import type {
 } from "@server/application/gateways/base/gateway";
 import type { Owner } from "@server/domain/entities/owner";
 import type { Pet } from "@server/domain/entities/pet";
-import type {
+import {
   Satisfaction,
-  ServiceOrder,
-  ServiceType,
+  type ServiceOrder,
+  type ServiceType,
 } from "@server/domain/entities/service-order";
 import type { Veterinarian } from "@server/domain/entities/veterinarian";
 
@@ -84,15 +84,33 @@ export class ListServiceOrdersUserCase {
       return owner.value;
     });
 
-    return this.serviceOrders.map((serviceOrder, index) => ({
-      serviceOrder,
-      serviceType: serviceTypesValues[index]!,
-      veterinarian: veterinariansValues[index]!,
-      pet: petsValues[index]!,
-      owner: ownersValues[index]!,
+    return this.serviceOrders.map((serviceOrder, index) => {
       // TODO: Retornar aqui ao implementar a funcionalidade de satisfação
-      satisfaction: undefined,
-    }));
+      const MOCKED_satisfaction =
+        serviceOrder.status !== "COMPLETED"
+          ? undefined
+          : Satisfaction.create({
+              id: serviceOrder.id,
+              serviceOrderId: serviceOrder.id,
+              rating: "GOOD",
+              comment: "Ótimo atendimento!",
+              createdAt: serviceOrder.createdAt,
+              updatedAt: serviceOrder.updatedAt,
+            });
+
+      const satisfaction = MOCKED_satisfaction?.ok
+        ? (MOCKED_satisfaction.value as Entry<Satisfaction>)
+        : undefined;
+
+      return {
+        serviceOrder,
+        serviceType: serviceTypesValues[index]!,
+        veterinarian: veterinariansValues[index]!,
+        pet: petsValues[index]!,
+        owner: ownersValues[index]!,
+        satisfaction,
+      };
+    });
   }
 
   private getServiceTypes() {
