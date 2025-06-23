@@ -14,7 +14,7 @@ import {
   ServiceType,
 } from "@server/domain/entities/service-order";
 import { Veterinarian } from "@server/domain/entities/veterinarian";
-import { CreationFailedError } from "../errors/creation-failed";
+import { CreationFailedError } from "../../errors/creation-failed";
 
 interface Dependencies {
   serviceOrderGateway: ServiceOrderGateway;
