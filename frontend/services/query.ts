@@ -1,17 +1,23 @@
 import type { HttpResponse } from "@core/http";
 import type { QueryFunction } from "@tanstack/react-query";
+import { type z } from "zod";
 
 export function makeQuery<TResponseData>(
   url: string,
+  zodSchema: z.ZodSchema<TResponseData>,
 ): QueryFunction<TResponseData> {
   return async () => {
     const response = await fetch(`/api${url}`);
 
-    const body = (await response.json()) as HttpResponse<TResponseData>;
+    const body = (await response.json()) as HttpResponse<unknown>;
 
     if ("error" in body) throw body.error;
+    const isValid = zodSchema.safeParse(body.data);
 
-    return body.data;
+    if (!isValid.success)
+      throw new Error("Dados inválidos recebidos do servidor");
+
+    return isValid.data;
   };
 }
 

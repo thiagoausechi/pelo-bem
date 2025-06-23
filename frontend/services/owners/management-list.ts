@@ -1,4 +1,5 @@
-import type { OwnerDTO } from "@core/contracts/dtos/owners";
+import { ownerDtoSchema } from "@core/contracts/dtos/owners";
+import { z } from "zod";
 import { makeQuery } from "../query";
 
 export const ownersManagementListQueryKey = [
@@ -7,4 +8,7 @@ export const ownersManagementListQueryKey = [
   "owners-management-list",
 ] as const;
 
-export const fetchOwnersManagementList = makeQuery<OwnerDTO[]>("/owners");
+export const fetchOwnersManagementList = makeQuery(
+  "/owners",
+  z.array(ownerDtoSchema),
+);

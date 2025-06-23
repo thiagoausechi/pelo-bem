@@ -1,4 +1,5 @@
-import type { VeterinarianDTO } from "@core/contracts/dtos/veterinarians";
+import { veterinarianDtoSchema } from "@core/contracts/dtos/veterinarians";
+import { z } from "zod";
 import { makeQuery } from "../query";
 
 export const veterinariansManagementListQueryKey = [
@@ -7,5 +8,7 @@ export const veterinariansManagementListQueryKey = [
   "veterinarians-management-list",
 ] as const;
 
-export const fetchVeterinariansManagementList =
-  makeQuery<VeterinarianDTO[]>("/veterinarians");
+export const fetchVeterinariansManagementList = makeQuery(
+  "/veterinarians",
+  z.array(veterinarianDtoSchema),
+);

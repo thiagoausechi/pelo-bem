@@ -1,4 +1,5 @@
-import type { PetDTO } from "@core/contracts/dtos/pets";
+import { petDtoSchema } from "@core/contracts/dtos/pets";
+import { z } from "zod";
 import { makeQuery } from "../query";
 
 export const petsManagementListQueryKey = [
@@ -7,4 +8,7 @@ export const petsManagementListQueryKey = [
   "pets-management-list",
 ] as const;
 
-export const fetchPetsManagementList = makeQuery<PetDTO[]>("/pets");
+export const fetchPetsManagementList = makeQuery(
+  "/pets",
+  z.array(petDtoSchema),
+);
