@@ -9,6 +9,31 @@ import type { NextRequest, NextResponse } from "next/server";
 import type { z, ZodObject, ZodRawShape } from "zod";
 
 export class NextJsController {
+  /**
+   * Extrai e sanitiza os parâmetros de busca (search params) de uma NextRequest.
+   * Converte os searchParams em um objeto Record<string, string> simples.
+   * Se uma chave (key) tiver múltiplos valores, apenas o último será considerado.
+   *
+   * @param request O objeto NextRequest que contém os parâmetros da URL.
+   * @returns Um objeto no formato Record<string, string> com os parâmetros.
+   */
+  protected sanitizeSearchParams(
+    request: NextRequest,
+    allowedFilters: string[],
+  ) {
+    const safeFilters: Record<string, string> = {};
+
+    for (const [key, value] of request.nextUrl.searchParams.entries())
+      if (
+        allowedFilters.includes(key) &&
+        typeof value === "string" &&
+        value.trim()
+      )
+        safeFilters[key] = value.trim();
+
+    return safeFilters;
+  }
+
   protected async parseRequest<TSchema extends ZodRawShape>(
     parser: ZodObject<TSchema>,
     request: NextRequest,
