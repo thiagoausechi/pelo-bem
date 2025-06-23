@@ -1,4 +1,3 @@
-import { calculateAge } from "@core/age";
 import type { PetDTO } from "@core/contracts/dtos/pets";
 import { createPetForm } from "@core/contracts/forms/pet";
 import { HttpStatus } from "@core/http";
@@ -6,8 +5,8 @@ import type { OwnerGateway, PetGateway } from "@server/application/gateways";
 import type { FileStorageGateway } from "@server/application/gateways/file-storage";
 import { CreatePetUseCase } from "@server/application/usecases/pet";
 import { ListPetsUseCase } from "@server/application/usecases/pet/list";
-import { env } from "@server/infrastructure/configs/env";
 import type { NextRequest, NextResponse } from "next/server";
+import { mapPetToDTO } from "../mappers/pet";
 import { NextJsController } from "./base";
 
 interface Dependencies {
@@ -30,21 +29,9 @@ export class NextJsPetsController extends NextJsController {
         filters: id ? { id } : undefined,
       });
 
-      // TODO: Criar um mapper para os DTOs
-      const result: PetDTO[] = useCaseResponse.map(({ pet, owner }) => ({
-        ...pet,
-        picture: `${env.S3_PUBLIC_URL}/pets/${pet.id}.png`,
-        age: calculateAge(pet.birthday),
-
-        ownerId: undefined,
-        owner: {
-          ...owner,
-          profile: `${env.S3_PUBLIC_URL}/owners/${owner.id}.png`,
-          name: owner.fullname,
-          email: owner.email.get(),
-          phone: owner.phone.get(),
-        },
-      }));
+      const result: PetDTO[] = useCaseResponse.map((response) =>
+        mapPetToDTO(response),
+      );
 
       const response = id ? result[0] : result;
 
