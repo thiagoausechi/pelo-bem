@@ -88,6 +88,11 @@ export class Seeder {
       table: schema.veterinarians,
       quantity: Seeder.NUM_VETERINARIANS,
       generateFn: () => {
+        const fullname = faker.person.fullName();
+        const firstName = fullname.split(" ")[0];
+        const lastName = fullname.split(" ")[1];
+        const email = faker.internet.email({ firstName, lastName });
+
         const brazilianState = faker.helpers.arrayElement(brazilianStates);
         const licenseNumber = faker.string.numeric({
           length: 5,
@@ -95,8 +100,8 @@ export class Seeder {
         });
 
         return {
-          fullname: faker.person.fullName(),
-          email: faker.internet.email(),
+          fullname,
+          email,
           phone: faker.string.numeric({ length: 11, allowLeadingZeros: true }),
           license: `CRMV-${brazilianState} ${licenseNumber}`,
         };
@@ -108,11 +113,18 @@ export class Seeder {
     return await this.generate({
       table: schema.owners,
       quantity: Seeder.NUM_OWNERS,
-      generateFn: () => ({
-        fullname: faker.person.fullName(),
-        email: faker.internet.email(),
-        phone: faker.string.numeric({ length: 11, allowLeadingZeros: true }),
-      }),
+      generateFn: () => {
+        const fullname = faker.person.fullName();
+        const firstName = fullname.split(" ")[0];
+        const lastName = fullname.split(" ")[1];
+        const email = faker.internet.email({ firstName, lastName });
+
+        return {
+          fullname,
+          email,
+          phone: faker.string.numeric({ length: 11, allowLeadingZeros: true }),
+        };
+      },
     });
   }
 
