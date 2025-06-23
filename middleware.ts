@@ -12,16 +12,22 @@ export async function middleware(request: NextRequest) {
   );
   const pathname = request.nextUrl.pathname;
 
+  // Se estiver na rota raiz "/"
   if (pathname === "/") {
-    if (session.isLoggedIn)
+    if (session.isLoggedIn) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
-    else return NextResponse.redirect(new URL("/login", request.url));
+    } else {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
 
-  if (pathname === "/login" && session.isLoggedIn)
+  // Se estiver na página de login e já estiver logado, redireciona para dashboard
+  if (pathname === "/login" && session.isLoggedIn) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
-  if (!session.isLoggedIn) {
+  // Se não estiver logado e não estiver na página de login, redireciona para login
+  if (!session.isLoggedIn && pathname !== "/login") {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
