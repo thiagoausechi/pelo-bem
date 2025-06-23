@@ -46,14 +46,14 @@ export function MobileNav({ links, currentPath }: Props) {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="bg-background/90 no-scrollbar h-(--radix-popper-available-height) w-(--radix-popper-available-width) overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
+        className="bg-background/90 no-scrollbar flex h-(--radix-popper-available-height) w-(--radix-popper-available-width) flex-col overflow-y-auto rounded-none border-none p-0 shadow-none backdrop-blur duration-100"
         align="center"
         side="bottom"
         alignOffset={-16}
         sideOffset={14}
       >
-        <nav className="flex flex-col gap-4">
-          <ul className="flex flex-col items-center gap-3">
+        <nav className="flex flex-1 flex-col gap-4">
+          <ul className="flex grow flex-col items-center justify-center gap-3">
             {links.map((link) => (
               <li key={link.href}>
                 <MobileLink
