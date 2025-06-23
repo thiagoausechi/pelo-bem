@@ -1,5 +1,6 @@
 import type { ServiceTypeGateway } from "@server/application/gateways";
 import type {
+  Entry,
   FiltersFor,
   ListOptions,
 } from "@server/application/gateways/base/gateway";
@@ -15,7 +16,7 @@ interface Request {
 }
 
 interface Response {
-  serviceType: ServiceType;
+  serviceType: Entry<ServiceType>;
 }
 
 export class ListServiceTypesUseCase {
