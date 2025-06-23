@@ -32,7 +32,7 @@ export class NextJsServiceOrdersController extends NextJsController {
   async handleGetOrder(request: NextRequest): Promise<NextResponse> {
     return this.handleRequest(async () => {
       const pathSegments = this.parsePath(request);
-      const id = pathSegments.length > 0 ? pathSegments[0] : undefined;
+      const id = pathSegments.length > 1 ? pathSegments[1] : undefined;
 
       const useCaseResponse = await new ListServiceOrdersUserCase(
         this.deps,
