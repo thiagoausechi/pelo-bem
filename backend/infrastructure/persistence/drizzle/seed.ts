@@ -110,6 +110,8 @@ export class Seeder {
   }
 
   private async generateOwners() {
+    console.log(`\t- Gerando ${Seeder.NUM_OWNERS} donos de pets...`);
+
     return await this.generate({
       table: schema.owners,
       quantity: Seeder.NUM_OWNERS,
@@ -133,6 +135,8 @@ export class Seeder {
   }: {
     owners: schema.PgOwnerInsertModel[];
   }) {
+    console.log(`\t- Gerando ${Seeder.NUM_PETS} pets...`);
+
     return await this.generate({
       table: schema.pets,
       quantity: Seeder.NUM_PETS,
@@ -172,6 +176,8 @@ export class Seeder {
   }
 
   private async generateServiceTypes() {
+    console.log(`\t- Gerando tipos de serviços pré-definidos...`);
+
     return await this.tx
       .insert(schema.serviceTypes)
       .values([
@@ -213,6 +219,10 @@ export class Seeder {
     veterinarians: schema.PgVeterinarianInsertModel[];
     serviceTypes: schema.PgServiceTypeInsertModel[];
   }) {
+    console.log(
+      `\t- Gerando ${Seeder.NUM_SERVICE_ORDERS} ordens de serviço...`,
+    );
+
     return this.generate({
       table: schema.serviceOrders,
       quantity: Seeder.NUM_SERVICE_ORDERS,
@@ -256,6 +266,8 @@ export class Seeder {
       (order) => order.status === "COMPLETED",
     );
     let serviceOrderIndex = 0;
+
+    console.log(`\t- Gerando ${completedOrders.length} avaliações...`);
 
     return this.generate({
       table: schema.satisfactions,
