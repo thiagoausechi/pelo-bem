@@ -45,7 +45,10 @@ export class NextJsUsersController extends NextJsController {
   async handleLogout(_: NextRequest): Promise<NextResponse> {
     return this.handleRequest(async () => {
       const session = await getSession();
-      session.destroy();
+
+      session.username = undefined;
+      session.isLoggedIn = false;
+      await session.save();
 
       return HttpStatus.OK("Logout bem-sucedido!");
     });
