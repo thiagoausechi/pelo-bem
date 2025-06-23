@@ -1,0 +1,26 @@
+import { useForm } from "@client/hooks/form";
+import { makeMutation } from "@client/services/query";
+import { loginForm, type LoginFormData } from "@core/contracts/forms/login";
+
+const sendLoginRequest = makeMutation<LoginFormData, void>("/login", {
+  valuesToFormData: (values) => {
+    const formData = new FormData();
+    formData.append("username", values.username);
+    formData.append("password", values.password);
+    return formData;
+  },
+});
+
+export function useLoginLogic() {
+  const formContext = useForm({
+    schema: loginForm,
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+    requestFn: sendLoginRequest,
+    successMessage: "Login realizado com sucesso!",
+  });
+
+  return formContext;
+}
