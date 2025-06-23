@@ -18,6 +18,9 @@ export const env = createEnv({
     APP_HOST: z.string(),
     APP_PORT: z.string().optional(), // Modo de desenvolvimento, mas não necessário em produção
     APP_URL: z.string().url(),
+    SECRET_COOKIE_PASSWORD: z.string().min(32, {
+      message: "A senha do cookie deve ter pelo menos 32 caracteres.",
+    }),
 
     /**===================================================================================================
      *  Banco de Dados (Drizzle ORM)
@@ -102,6 +105,7 @@ function processAppVariables() {
     APP_HOST: process.env.APP_HOST,
     APP_PORT: process.env.APP_PORT ?? "",
     APP_URL: process.env.APP_URL,
+    SECRET_COOKIE_PASSWORD: process.env.SECRET_COOKIE_PASSWORD,
   };
 
   const APP_URL =
