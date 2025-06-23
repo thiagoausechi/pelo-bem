@@ -34,11 +34,14 @@ export class NextJsServiceOrdersController extends NextJsController {
       const pathSegments = this.parsePath(request);
       const id = pathSegments.length > 1 ? pathSegments[1] : undefined;
 
+      const filters = {
+        ...this.sanitizeSearchParams(request),
+        id,
+      };
+
       const useCaseResponse = await new ListServiceOrdersUserCase(
         this.deps,
-      ).execute({
-        filters: id ? { id } : undefined,
-      });
+      ).execute({ filters });
 
       const result: ServiceOrderDTO[] = useCaseResponse.map((response) =>
         mapServiceOrderToDTO(response),
