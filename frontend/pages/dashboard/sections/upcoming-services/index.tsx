@@ -1,9 +1,27 @@
+import {
+  fetchUpcomingServicesList,
+  upcomingServicesListQueryKey,
+} from "@client/services/service-orders";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { UpcomingServicesTable } from "./management-table";
 
-export function UpcomingServicesSection() {
+export async function UpcomingServicesSection() {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: upcomingServicesListQueryKey,
+    queryFn: fetchUpcomingServicesList,
+  });
+
   return (
-    <section className="flex flex-col gap-4">
-      <UpcomingServicesTable />
-    </section>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <section className="flex flex-col gap-4">
+        <UpcomingServicesTable />
+      </section>
+    </HydrationBoundary>
   );
 }

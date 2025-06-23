@@ -1,19 +1,26 @@
 "use client";
 
 import { DataTable } from "@client/components/ui/data-table";
+import {
+  fetchUpcomingServicesList,
+  upcomingServicesListQueryKey,
+} from "@client/services/service-orders";
+import { useQuery } from "@tanstack/react-query";
 import { columns } from "./config";
 
 export function UpcomingServicesTable() {
-  // TODO: Carregar dados da API
-
+  const { data, isLoading, isFetching, isError } = useQuery({
+    queryKey: upcomingServicesListQueryKey,
+    queryFn: fetchUpcomingServicesList,
+  });
   return (
     <DataTable
       title={<h2 className="font-bold">Serviços Agendados</h2>}
-      data={[]}
+      data={data ?? []}
       columns={columns}
       actions={[]}
-      loadingMessage={false && "Carregando..."}
-      errorMessage={false && "Erro ao carregar dados."}
+      loadingMessage={(isLoading || isFetching) && "Carregando..."}
+      errorMessage={isError && "Erro ao carregar dados."}
     />
   );
 }
