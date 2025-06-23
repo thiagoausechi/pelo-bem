@@ -9,8 +9,8 @@ import {
 } from "@server/application/usecases/owner";
 import type { EmailValidator } from "@server/domain/value-objects/email";
 import type { PhoneValidator } from "@server/domain/value-objects/phone";
-import { env } from "@server/infrastructure/configs/env";
 import { type NextRequest, type NextResponse } from "next/server";
+import { mapOwnerToDTO } from "../mappers/owner";
 import { NextJsController } from "./base";
 
 interface Dependencies {
@@ -35,16 +35,9 @@ export class NextJsOwnersController extends NextJsController {
         filters: id ? { id } : undefined,
       });
 
-      const result: OwnerDTO[] = useCaseResponse.map(({ owner, pets }) => ({
-        ...owner,
-        pets: pets.length, // TODO: Retonar aqui após criar o PetDTO
-        profile: `${env.S3_PUBLIC_URL}/owners/${owner.id}.png`,
-        name: owner.fullname,
-        email: owner.email.get(),
-        phone: owner.phone.get(),
-        createdAt: owner.createdAt,
-        updatedAt: owner.updatedAt,
-      }));
+      const result: OwnerDTO[] = useCaseResponse.map(({ owner }) =>
+        mapOwnerToDTO(owner),
+      );
 
       const response = id ? result[0] : result;
 

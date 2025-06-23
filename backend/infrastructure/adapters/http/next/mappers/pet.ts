@@ -4,6 +4,7 @@ import type { Entry } from "@server/application/gateways/base/gateway";
 import type { Owner } from "@server/domain/entities/owner";
 import type { Pet } from "@server/domain/entities/pet";
 import { env } from "@server/infrastructure/configs/env";
+import { mapOwnerToDTO } from "./owner";
 
 export function mapPetToDTO({
   pet,
@@ -26,14 +27,6 @@ export function mapPetToDTO({
     createdAt: pet.createdAt,
     updatedAt: pet.updatedAt,
 
-    owner: {
-      id: owner.id,
-      profile: `${env.S3_PUBLIC_URL}/owners/${owner.id}.png`,
-      name: owner.fullname,
-      email: owner.email.get(),
-      phone: owner.phone.get(),
-      createdAt: owner.createdAt,
-      updatedAt: owner.updatedAt,
-    },
+    owner: mapOwnerToDTO(owner),
   };
 }

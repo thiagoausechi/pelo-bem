@@ -4,7 +4,6 @@ export interface OwnerDTO {
   name: string;
   email: string;
   phone: string;
-  pets: number;
   createdAt: Date;
   updatedAt: Date;
 }

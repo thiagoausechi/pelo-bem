@@ -87,20 +87,6 @@ export const columns: Column<OwnerDTO>[] = [
     ),
   },
   {
-    accessorKey: "pets",
-    title: "Pets",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Pets" />
-    ),
-    cell: ({ row }) => (
-      <div className="flex gap-2">
-        <span className="max-w-[500px] truncate font-medium">
-          {row.getValue("pets")}
-        </span>
-      </div>
-    ),
-  },
-  {
     id: "actions",
     title: "Ações",
     enableHiding: false,

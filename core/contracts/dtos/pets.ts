@@ -3,7 +3,7 @@ import type { OwnerDTO } from "./owners";
 
 export interface PetDTO {
   id: string;
-  owner: Omit<OwnerDTO, "pets">;
+  owner: OwnerDTO;
   picture?: string;
   name: string;
   specie: Specie;
