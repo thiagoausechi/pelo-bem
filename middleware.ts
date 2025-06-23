@@ -10,10 +10,20 @@ export async function middleware(request: NextRequest) {
     response,
     sessionOptions,
   );
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname === "/") {
+    if (session.isLoggedIn)
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    else return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (pathname === "/login" && session.isLoggedIn)
+    return NextResponse.redirect(new URL("/dashboard", request.url));
 
   if (!session.isLoggedIn) {
     const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
+    loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -29,9 +39,8 @@ export const config = {
      * - _next/image (otimização de imagem)
      * - favicon.ico (arquivo de ícone)
      * - logo.svg (arquivo de logo)
-     * - /login (a própria página de login para evitar um loop de redirecionamento)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|logo.svg|login).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|logo.svg).*)",
 
     // Rotas Protegidas
     "/dashboard/:path*",
