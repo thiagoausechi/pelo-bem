@@ -1,28 +1,53 @@
+import type { ServiceOrderDTO } from "@core/contracts/dtos/service-orders";
 import { createServiceOrderForm } from "@core/contracts/forms/service-order";
 import { HttpStatus } from "@core/http";
 import type {
+  OwnerGateway,
   PetGateway,
   ServiceOrderGateway,
   ServiceTypeGateway,
   VeterinarianGateway,
 } from "@server/application/gateways";
-import { CreateServiceOrderUseCase } from "@server/application/usecases/service-order";
+import {
+  CreateServiceOrderUseCase,
+  ListServiceOrdersUserCase,
+} from "@server/application/usecases/service-order";
 import type { NextRequest, NextResponse } from "next/server";
+import { mapServiceOrderToDTO } from "../mappers/service-order";
 import { NextJsController } from "./base";
 
 interface Dependecies {
   serviceOrderGateway: ServiceOrderGateway;
   serviceTypeGateway: ServiceTypeGateway;
-  petGateway: PetGateway;
   veterinarianGateway: VeterinarianGateway;
+  petGateway: PetGateway;
+  ownerGateway: OwnerGateway;
 }
 
 export class NextJsServiceOrdersController extends NextJsController {
   constructor(private deps: Dependecies) {
     super();
   }
-  async handleGetOrder(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
+
+  async handleGetOrder(request: NextRequest): Promise<NextResponse> {
+    return this.handleRequest(async () => {
+      const pathSegments = this.parsePath(request);
+      const id = pathSegments.length > 0 ? pathSegments[0] : undefined;
+
+      const useCaseResponse = await new ListServiceOrdersUserCase(
+        this.deps,
+      ).execute({
+        filters: id ? { id } : undefined,
+      });
+
+      const result: ServiceOrderDTO[] = useCaseResponse.map((response) =>
+        mapServiceOrderToDTO(response),
+      );
+
+      const response = id ? result[0] : result;
+
+      return HttpStatus.OK(response);
+    });
   }
 
   async handlePostOrder(request: NextRequest): Promise<NextResponse> {
