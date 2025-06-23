@@ -1,5 +1,6 @@
 "use client";
 
+import { SeedAction } from "@client/components/layout/actions/seed";
 import { DataTable } from "@client/components/ui/data-table";
 import {
   fetchUpcomingServicesList,
@@ -13,12 +14,13 @@ export function UpcomingServicesTable() {
     queryKey: upcomingServicesListQueryKey,
     queryFn: fetchUpcomingServicesList,
   });
+
   return (
     <DataTable
       title={<h2 className="font-bold">Serviços Agendados</h2>}
       data={data ?? []}
       columns={columns}
-      actions={[]}
+      actions={[<SeedAction key="seed-action" />]}
       loadingMessage={(isLoading || isFetching) && "Carregando..."}
       errorMessage={isError && "Erro ao carregar dados."}
     />
