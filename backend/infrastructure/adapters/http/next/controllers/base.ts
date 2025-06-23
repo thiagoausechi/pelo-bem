@@ -34,6 +34,25 @@ export class NextJsController {
     return safeFilters;
   }
 
+  /**
+   * Analisa e valida dados de formulário de uma requisição Next.js usando um esquema Zod.
+   *
+   * @template TSchema - O tipo do esquema Zod que estende ZodRawShape
+   * @param parser - O objeto ZodObject usado para validar os dados do formulário
+   * @param request - A requisição Next.js contendo os dados do formulário
+   * @returns Uma Promise que resolve com os dados validados e tipados conforme o esquema
+   * @throws Lança erro se a validação do Zod falhar ou se houver problemas ao processar o FormData
+   *
+   * @example
+   * ```typescript
+   * const schema = z.object({
+   *   name: z.string(),
+   *   email: z.string().email()
+   * });
+   *
+   * const validatedData = await this.parseRequest(schema, request);
+   * ```
+   */
   protected async parseRequest<TSchema extends ZodRawShape>(
     parser: ZodObject<TSchema>,
     request: NextRequest,
