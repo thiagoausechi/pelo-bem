@@ -33,6 +33,7 @@ export function parseFilters<TEntity extends object>(params: {
     if (value === undefined) return;
 
     const column = table[key] as Column;
+    if (!column) return;
 
     if (value === null) return conditions.push(isNull(column));
 
