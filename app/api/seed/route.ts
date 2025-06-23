@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 
 export async function POST(_: NextRequest) {
   try {
-    await Seeder.seed();
+    await new Seeder().seed();
 
     return HttpStatus.OK("Seed realizado com sucesso.");
   } catch (error) {

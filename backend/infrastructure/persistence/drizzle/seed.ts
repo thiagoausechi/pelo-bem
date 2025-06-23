@@ -1,4 +1,3 @@
-/* eslint-disable drizzle/enforce-delete-with-where */
 import { genders, species } from "@core/contracts/enums/pets";
 import { SpeciesInfo } from "@core/contracts/enums/pets/species.info";
 import {
@@ -7,6 +6,7 @@ import {
 } from "@core/contracts/enums/service-orders";
 import { brazilianStates } from "@core/contracts/enums/veterinarians";
 import { fakerPT_BR as faker } from "@faker-js/faker";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { PgTableWithColumns, TableConfig } from "drizzle-orm/pg-core";
 import { db } from ".";
 import * as schema from "./models/schema";
@@ -17,28 +17,35 @@ export class Seeder {
   private static readonly NUM_VETERINARIANS = 5;
   private static readonly NUM_SERVICE_ORDERS = Seeder.NUM_PETS * 2;
 
-  static async seed() {
+  private tx!: NodePgDatabase<typeof schema>;
+
+  async seed() {
     console.log("🌱 Iniciando o seeding do banco de dados...");
 
-    await this.truncateTables();
-    await this.generateData();
+    await db.transaction(async (tx) => {
+      this.tx = tx;
+
+      // Usando a transação para garantir que todas as operações sejam atômicas
+      await this.truncateTables();
+      await this.generateData();
+    });
 
     console.log("✅ Seeding concluído com sucesso!");
   }
 
-  private static async truncateTables() {
+  private async truncateTables() {
     console.log("🧹 Limpando todas as tabelas...");
 
     // A ordem de exclusão é importante para evitar erros de chave estrangeira
-    await db.delete(schema.satisfactions);
-    await db.delete(schema.serviceOrders);
-    await db.delete(schema.serviceTypes);
-    await db.delete(schema.veterinarians);
-    await db.delete(schema.pets);
-    await db.delete(schema.owners);
+    await this.tx.delete(schema.satisfactions);
+    await this.tx.delete(schema.serviceOrders);
+    await this.tx.delete(schema.serviceTypes);
+    await this.tx.delete(schema.veterinarians);
+    await this.tx.delete(schema.pets);
+    await this.tx.delete(schema.owners);
   }
 
-  private static async generateData() {
+  private async generateData() {
     console.log("📦 Gerando dados...");
 
     const veterinarians = await this.generateVeterinarians();
@@ -59,7 +66,7 @@ export class Seeder {
 
   // === GERADORES ===
 
-  private static async generate<T extends TableConfig>({
+  private async generate<T extends TableConfig>({
     quantity,
     generateFn,
     table,
@@ -69,17 +76,17 @@ export class Seeder {
     table: PgTableWithColumns<T>;
   }) {
     const data = Array.from({ length: quantity }, generateFn);
-    return await db
+    return await this.tx
       .insert(table)
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
       .values(data as any)
       .returning();
   }
 
-  private static async generateVeterinarians() {
+  private async generateVeterinarians() {
     return await this.generate({
       table: schema.veterinarians,
-      quantity: this.NUM_VETERINARIANS,
+      quantity: Seeder.NUM_VETERINARIANS,
       generateFn: () => {
         const brazilianState = faker.helpers.arrayElement(brazilianStates);
         const licenseNumber = faker.string.numeric({
@@ -97,10 +104,10 @@ export class Seeder {
     });
   }
 
-  private static async generateOwners() {
+  private async generateOwners() {
     return await this.generate({
       table: schema.owners,
-      quantity: this.NUM_OWNERS,
+      quantity: Seeder.NUM_OWNERS,
       generateFn: () => ({
         fullname: faker.person.fullName(),
         email: faker.internet.email(),
@@ -109,14 +116,14 @@ export class Seeder {
     });
   }
 
-  private static async generatePets({
+  private async generatePets({
     owners,
   }: {
     owners: schema.PgOwnerInsertModel[];
   }) {
     return await this.generate({
       table: schema.pets,
-      quantity: this.NUM_PETS,
+      quantity: Seeder.NUM_PETS,
       generateFn: () => {
         const specie = faker.helpers.arrayElement(species);
         const breed =
@@ -149,8 +156,8 @@ export class Seeder {
     });
   }
 
-  private static async generateServiceTypes() {
-    return await db
+  private async generateServiceTypes() {
+    return await this.tx
       .insert(schema.serviceTypes)
       .values([
         {
@@ -182,7 +189,7 @@ export class Seeder {
       .returning();
   }
 
-  private static async generateServiceOrders({
+  private async generateServiceOrders({
     pets,
     veterinarians,
     serviceTypes,
@@ -193,7 +200,7 @@ export class Seeder {
   }) {
     return this.generate({
       table: schema.serviceOrders,
-      quantity: this.NUM_SERVICE_ORDERS,
+      quantity: Seeder.NUM_SERVICE_ORDERS,
       generateFn: () => {
         const veterinarian = faker.helpers.arrayElement(veterinarians);
 
@@ -225,7 +232,7 @@ export class Seeder {
     });
   }
 
-  private static async generateSatisfactions({
+  private async generateSatisfactions({
     serviceOrders,
   }: {
     serviceOrders: schema.PgServiceOrderInsertModel[];
