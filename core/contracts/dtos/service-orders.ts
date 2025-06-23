@@ -1,35 +1,55 @@
-import type { Rating, ServiceOrderStatus } from "../enums/service-orders";
-import type { PetDTO } from "./pets";
-import type { VeterinarianDTO } from "./veterinarians";
+import { z } from "zod";
+import {
+  ratings,
+  serviceOrderStatus,
+  type ServiceOrderStatus,
+} from "../enums/service-orders";
+import { petDtoSchema } from "./pets";
+import { veterinarianDtoSchema } from "./veterinarians";
 
-export interface ServiceTypeDTO {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-export interface SatisfactionDTO {
-  rating: Rating;
-  comment?: string;
-}
+export const serviceTypeDtoSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  price: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+});
+export type ServiceTypeDTO = z.infer<typeof serviceTypeDtoSchema>;
 
-export type ServiceOrderDTO = {
-  id: string;
-  pet: PetDTO;
-  veterinarian: VeterinarianDTO;
-  appointmentDate: Date;
-  serviceType: ServiceTypeDTO;
-  createdAt: Date;
-  updatedAt: Date;
-} & (
-  | {
-      status: "COMPLETED";
-      satisfaction: SatisfactionDTO;
-    }
-  | {
-      status: Omit<ServiceOrderStatus, "COMPLETED">;
-      satisfaction?: never;
-    }
-);
+export const satisfactionDtoSchema = z.object({
+  rating: z.enum(ratings),
+  comment: z.string().optional(),
+});
+export type SatisfactionDTO = z.infer<typeof satisfactionDtoSchema>;
+
+export const serviceOrderDtoSchema = z.discriminatedUnion("status", [
+  z.object({
+    id: z.string(),
+    status: z.literal("COMPLETED"),
+    pet: petDtoSchema,
+    veterinarian: veterinarianDtoSchema,
+    serviceType: serviceTypeDtoSchema,
+    appointmentDate: z.coerce.date(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
+    satisfaction: satisfactionDtoSchema,
+  }),
+  z.object({
+    id: z.string(),
+    status: z.enum(
+      serviceOrderStatus.filter((s) => s !== "COMPLETED") as [
+        Exclude<ServiceOrderStatus, "COMPLETED">,
+        ...Exclude<ServiceOrderStatus, "COMPLETED">[],
+      ],
+    ),
+    pet: petDtoSchema,
+    veterinarian: veterinarianDtoSchema,
+    serviceType: serviceTypeDtoSchema,
+    appointmentDate: z.coerce.date(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
+    satisfaction: z.undefined(),
+  }),
+]);
+export type ServiceOrderDTO = z.infer<typeof serviceOrderDtoSchema>;
