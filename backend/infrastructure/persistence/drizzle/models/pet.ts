@@ -18,7 +18,13 @@ export const pets = appSchema.table("pets", {
   specie: specieEnum("specie").notNull(),
   breed: text("breed").notNull(),
   birthday: timestamp("birthday", { mode: "date" }).notNull(),
-  weightKg: numericToNumber("weight_kg").$type<number>().notNull(),
+  weightKg: numericToNumber("weight_kg", {
+    precision: 6, // 6 dígitos no total
+    scale: 3, // 3 dígitos após o ponto decimal
+    // Pode ir de 0.000 até 999.999
+  })
+    .$type<number>()
+    .notNull(),
   heightCm: smallint("height_cm").notNull(),
   gender: genderEnum("gender").notNull(),
 });
