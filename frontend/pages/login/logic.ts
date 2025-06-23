@@ -1,6 +1,7 @@
 import { useForm } from "@client/hooks/form";
 import { makeMutation } from "@client/services/query";
 import { loginForm, type LoginFormData } from "@core/contracts/forms/login";
+import { useRouter } from "next/navigation";
 
 const sendLoginRequest = makeMutation<LoginFormData, void>("/login", {
   valuesToFormData: (values) => {
@@ -12,6 +13,8 @@ const sendLoginRequest = makeMutation<LoginFormData, void>("/login", {
 });
 
 export function useLoginLogic() {
+  const router = useRouter();
+
   const formContext = useForm({
     schema: loginForm,
     defaultValues: {
@@ -20,6 +23,10 @@ export function useLoginLogic() {
     },
     requestFn: sendLoginRequest,
     successMessage: "Login realizado com sucesso!",
+    onSuccess: () => {
+      router.push("/dashboard");
+      router.refresh();
+    },
   });
 
   return formContext;
