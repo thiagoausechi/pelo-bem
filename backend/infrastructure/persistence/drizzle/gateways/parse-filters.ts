@@ -39,6 +39,9 @@ export function parseFilters<TEntity extends object>(params: {
     if (typeof value === "number") return conditions.push(eq(column, value));
 
     if (typeof value === "string") {
+      if (column.columnType === "PgEnumColumn")
+        return conditions.push(eq(column, value));
+
       // UUID é tratado como string, mas deve ser comparado com eq
       if (value.length === 36 && value.includes("-"))
         return conditions.push(eq(column, value));
