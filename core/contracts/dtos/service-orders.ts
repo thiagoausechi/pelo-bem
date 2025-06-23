@@ -10,6 +10,10 @@ export interface ServiceTypeDTO {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface SatisfactionDTO {
+  rating: Rating;
+  comment?: string;
+}
 
 export type ServiceOrderDTO = {
   id: string;
@@ -22,10 +26,7 @@ export type ServiceOrderDTO = {
 } & (
   | {
       status: "COMPLETED";
-      satisfaction: {
-        rating: Rating;
-        comment?: string;
-      };
+      satisfaction: SatisfactionDTO;
     }
   | {
       status: Omit<ServiceOrderStatus, "COMPLETED">;
