@@ -65,7 +65,7 @@ export class NextJsServiceOrdersController extends NextJsController {
   }
 
   async handlePostOrder(request: NextRequest): Promise<NextResponse> {
-    if (this.parsePath(request).length > 0)
+    if (this.parsePath(request).length > 1)
       return HttpStatus.BAD_REQUEST(
         "Caminho de requisição inválido para o método POST.",
       );
@@ -115,7 +115,7 @@ export class NextJsServiceOrdersController extends NextJsController {
   }
 
   async handlePostServiceType(request: NextRequest): Promise<NextResponse> {
-    if (this.parsePath(request).length > 0)
+    if (this.parsePath(request).length > 1)
       return HttpStatus.BAD_REQUEST(
         "Caminho de requisição inválido para o método POST.",
       );
