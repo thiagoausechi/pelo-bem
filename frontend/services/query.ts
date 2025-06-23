@@ -14,8 +14,10 @@ export function makeQuery<TResponseData>(
     if ("error" in body) throw body.error;
     const isValid = zodSchema.safeParse(body.data);
 
-    if (!isValid.success)
+    if (!isValid.success) {
+      console.error("Erro de validação de dados:", isValid.error);
       throw new Error("Dados inválidos recebidos do servidor");
+    }
 
     return isValid.data;
   };
