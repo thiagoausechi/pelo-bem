@@ -1,4 +1,7 @@
-import type { ServiceOrderDTO } from "@core/contracts/dtos/service-orders";
+import type {
+  ServiceOrderDTO,
+  ServiceTypeDTO,
+} from "@core/contracts/dtos/service-orders";
 import {
   createServiceOrderForm,
   createServiceTypeForm,
@@ -15,9 +18,13 @@ import {
   CreateServiceOrderUseCase,
   CreateServiceTypeUseCase,
   ListServiceOrdersUserCase,
+  ListServiceTypesUseCase,
 } from "@server/application/usecases/service-order";
 import type { NextRequest, NextResponse } from "next/server";
-import { mapServiceOrderToDTO } from "../mappers/service-order";
+import {
+  mapServiceOrderToDTO,
+  mapServiceTypeToDTO,
+} from "../mappers/service-order";
 import { NextJsController } from "./base";
 
 interface Dependecies {
@@ -83,8 +90,28 @@ export class NextJsServiceOrdersController extends NextJsController {
     return HttpStatus.NOT_IMPLEMENTED();
   }
 
-  async handleGetServiceType(_: NextRequest): Promise<NextResponse> {
-    return HttpStatus.NOT_IMPLEMENTED();
+  async handleGetServiceType(request: NextRequest): Promise<NextResponse> {
+    return this.handleRequest(async () => {
+      const pathSegments = this.parsePath(request);
+      const id = pathSegments.length > 1 ? pathSegments[1] : undefined;
+
+      const filters = {
+        ...this.sanitizeSearchParams(request),
+        id,
+      };
+
+      const useCaseResponse = await new ListServiceTypesUseCase(
+        this.deps,
+      ).execute({ filters });
+
+      const result: ServiceTypeDTO[] = useCaseResponse.map(({ serviceType }) =>
+        mapServiceTypeToDTO(serviceType),
+      );
+
+      const response = id ? result[0] : result;
+
+      return HttpStatus.OK(response);
+    });
   }
 
   async handlePostServiceType(request: NextRequest): Promise<NextResponse> {
