@@ -1,7 +1,7 @@
 import { genders, species } from "@core/contracts/enums/pets";
 import { relations } from "drizzle-orm";
 import { smallint, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { appSchema, baseSchema } from "./base";
+import { appSchema, baseSchema, numericToNumber } from "./base";
 import { owners } from "./owner";
 
 export const specieEnum = appSchema.enum("specie", species);
@@ -18,7 +18,7 @@ export const pets = appSchema.table("pets", {
   specie: specieEnum("specie").notNull(),
   breed: text("breed").notNull(),
   birthday: timestamp("birthday", { mode: "date" }).notNull(),
-  weightGrams: smallint("weight_grams").notNull(),
+  weightKg: numericToNumber("weight_kg").$type<number>().notNull(),
   heightCm: smallint("height_cm").notNull(),
   gender: genderEnum("gender").notNull(),
 });
