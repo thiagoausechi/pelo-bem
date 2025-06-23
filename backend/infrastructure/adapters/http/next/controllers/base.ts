@@ -17,21 +17,13 @@ export class NextJsController {
    * @param request O objeto NextRequest que contém os parâmetros da URL.
    * @returns Um objeto no formato Record<string, string> com os parâmetros.
    */
-  protected sanitizeSearchParams(
-    request: NextRequest,
-    allowedFilters: string[],
-  ) {
-    const safeFilters: Record<string, string> = {};
+  protected sanitizeSearchParams(request: NextRequest) {
+    const sanitizedFilters: Record<string, string> = {};
 
     for (const [key, value] of request.nextUrl.searchParams.entries())
-      if (
-        allowedFilters.includes(key) &&
-        typeof value === "string" &&
-        value.trim()
-      )
-        safeFilters[key] = value.trim();
+      if (value.trim()) sanitizedFilters[key] = value.trim();
 
-    return safeFilters;
+    return sanitizedFilters;
   }
 
   /**
