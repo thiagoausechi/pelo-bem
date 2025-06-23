@@ -10,9 +10,15 @@ import {
   DataTableColumnHeader,
   type Column,
 } from "@client/components/ui/data-table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@client/components/ui/tooltip";
 import { acronym } from "@core/acronym";
 import type { ServiceOrderDTO } from "@core/contracts/dtos/service-orders";
 import { SpeciesInfo } from "@core/contracts/enums/pets/species.info";
+import { Info } from "lucide-react";
 import React from "react";
 
 export const columns: Column<ServiceOrderDTO>[] = [
@@ -136,7 +142,16 @@ export const columns: Column<ServiceOrderDTO>[] = [
       <DataTableColumnHeader column={column} title="Serviço" />
     ),
     cell: ({ row }) => (
-      <div className="flex gap-2">
+      <div className="grid grid-cols-[auto_1fr] gap-2">
+        <Tooltip>
+          <TooltipTrigger className="w-fit">
+            <Info className="text-muted-foreground size-4" />
+          </TooltipTrigger>
+          <TooltipContent>
+            {row.original.serviceType.description}
+          </TooltipContent>
+        </Tooltip>
+
         <span className="max-w-[500px] truncate font-medium">
           {row.getValue("serviceType.name")}
         </span>
