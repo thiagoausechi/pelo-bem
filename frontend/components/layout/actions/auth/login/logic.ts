@@ -3,7 +3,7 @@ import { makeMutation } from "@client/services/query";
 import { loginForm, type LoginFormData } from "@core/contracts/forms/login";
 import { useRouter } from "next/navigation";
 
-const sendLoginRequest = makeMutation<LoginFormData, void>("/login", {
+const sendLoginRequest = makeMutation<LoginFormData, void>("/auth/login", {
   valuesToFormData: (values) => {
     const formData = new FormData();
     formData.append("username", values.username);
